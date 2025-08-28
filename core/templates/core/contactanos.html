@@ -1,0 +1,74 @@
+{% extends 'core/base.html' %}
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contactanos</title>
+</head>
+<body>
+    {%block content%}
+         <div class="videocontainer">
+       <video autoplay muted loop playsinline id="bg-video">
+         <source src="{% static 'videos/contactanos.mp4' %}" type="video/mp4">
+           Tu navegador no soporta videos en HTML5.
+        </video>
+        <div class="overlay"></div>
+        <div class="textcontainer">
+            <img src="{% static 'core/img/logoR.png' %}" alt="ViANApp Logo" class="logo-text-img">
+           <h2>CONTACTANOS</h2>
+           <p>Cominicate con nosotros sobre cualquier duda<br><br>
+            que tengas,recuerda que estamos a tu servicio.</p>
+ 
+        </div>
+    </div>
+
+    <div class="contact-container">
+        <div class="textproblem">
+            <h2> <span class="azul">¿Cual es el  problema?</span> </h2>
+            <p>Nos comunicaremos contigo lo mas pronto<br>posible.</p>
+            <div class="imgcontact">
+                <img src="{% static 'core/img/contact.png' %}" alt="Contact Us" class="img-fluid">
+            </div>
+        </div>
+        <div class="formcontact">
+            <form id="contactForm">
+                <label for="nombre">Nombre completo</label>
+                <input type="text" id="nombre" name="nombre" required>
+
+                <label for="correo">Correo electrónico</label>
+                <input type="email" id="correo" name="correo" required>
+
+                <label for="telefono">Teléfono</label>
+                <input type="tel" id="telefono" name="telefono">
+
+                <label for="ciudad">Ciudad</label>
+                <input type="text" id="ciudad" name="ciudad">
+
+                <label for="mensaje">¿Inconveniente?</label>
+                <textarea id="mensaje" name="mensaje" rows="4" placeholder="Tu mensaje..." required></textarea>
+
+                <button type="submit" class="btn-enviar">Enviar mensaje</button>
+            </form>
+        </div>
+    </div>
+    <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const data = {
+            nombre: document.getElementById('nombre').value,
+            correo: document.getElementById('correo').value,
+            telefono: document.getElementById('telefono').value,
+            ciudad: document.getElementById('ciudad').value,
+            mensaje: document.getElementById('mensaje').value
+        };
+        console.log('Datos enviados:', data);
+        alert('¡Mensaje enviado! (Revisa la consola para ver los datos)');
+        this.reset();
+    });
+    </script>
+    {%endblock%}
+    
+</body>
+</html>

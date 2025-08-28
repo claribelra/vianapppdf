@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Landing VianApp{% endblock %}
+{% block content %}
+    <!-- Sección de video -->
+    <div class="videocontainer">
+       <video autoplay muted loop playsinline id="bg-video">
+         <source src="{% static 'videos/videoprincipal.mp4' %}" type="video/mp4">
+           Tu navegador no soporta videos en HTML5.
+        </video>
+        <div class="overlay"></div>
+        <div class="textcontainer">
+            <img src="{% static 'core/img/LOGO-VIANAAP2 (3).png' %}" alt="ViANApp Logo" class="logo-text-img">
+            <p>Parqueadero 24/7 con acceso rapido espacios
+                cubiertos y tarifas justas.
+            </p>
+            <div class="botones-container">
+                <a href="{% url 'reservarespacio' %}" class="btn-reserva">Reserva tu espacio</a>
+                <a href="{% url 'contactanos' %}" class="btn-reserva">Consulta tu disponibilidad</a>
+            </div>
+        </div>
+    </div>
+    <div class="textoct">
+        <div class="textoct-flex">
+            <div class="textoct-titulo">
+                <h2>Estaciona sin estrés con <span class="azul">ViANApp</span></h2>
+            </div>
+            <div class="textoct-parrafo">
+                <p>
+                    En viANApp  hacemos que estacionar sea fácil, rápido y seguro. Nuestros parqueaderos  cuentan con tecnología de seguridad avanzada y personal capacitado para proteger tu vehículo en todo momento.<br><br>
+                    Con cobertura en múltiples ubicaciones, ofrecemos servicios premium y puntos de recarga para vehículos eléctricos, para que disfrutes una experiencia de estacionamiento sin preocupaciones.
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- Sección de imágenes de sedes -->
+    <div class="imagensedes">
+        <h1>¡Encuentra tu <span class="azul">parqueadero más cercano!</span> </h1>
+        <div class="imagenes-grid">
+            <div class="sede-card">
+                <img src="{% static 'core/img/barrio-los-rosales-de-bogota-1400x933.jpg' %}" alt="Los Rosales">
+                <button class="btn-sede">
+                    Los Rosales
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+            <div class="sede-card">
+                <img src="{% static 'core/img/Bogotá_calle_94_con_carrera_8_El_Chicó..jpeg' %}" alt="Chico norte">
+                <button class="btn-sede">
+                    Chico norte
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+            <div class="sede-card">
+                <img src="{% static 'core/img/1200px-Centro_empresarial_St_bárbara_Bogotá (1).jpeg' %}" alt="Santa bárbara">
+                <button class="btn-sede">
+                    Santa bárbara
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="ovalocontainer">
+    <div class="logonegro">
+        <img src="{% static 'core/img/logoPvian.png' %}" alt="VianApp Logo">
+        <div class="logonegro-texto">
+            Estaciona sin <span class="azul">estrés</span>, conduce con <span class="verde">confianza</span>
+        </div>
+        <button class="btn-contactar">Contactar</button>
+    </div>
+    </div>
+   
+    <!-- Texto de compromiso -->
+    <div class="texto">
+        <h2>Nuestro compromiso</h2>
+        <p>
+            En VIANApp trabajamos cada día para ofrecerte estacionamientos seguros,
+            accesibles y bien ubicados, garantizando tu tranquilidad y la protección de tu vehículo.
+        </p>
+        <div class="cuadros-compromiso">
+            <div class="cuadro-compromiso">
+                <span class="cuadro-numero">+30</span>
+                <span class="cuadro-titulo">Parqueaderos a <b>nivel nacional</b></span>
+            </div>
+            <div class="cuadro-compromiso">
+                <span class="cuadro-numero">+3500</span>
+                <span class="cuadro-titulo">Usuarios <b>satisfechos</b></span>
+            </div>
+            <div class="cuadro-compromiso">
+                <span class="cuadro-numero">+6000</span>
+                <span class="cuadro-titulo">Vehículos <b>protegidos</b></span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

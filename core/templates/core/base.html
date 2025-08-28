@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ViANApp{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+    <!-- Botón superior izquierdo con menú hamburguesa funcional -->
+    <a href="/" class="btn-inicio" id="inicio-link" style="display: flex; align-items: center; gap: 8px;">
+        <span class="menu-icon" id="menu-toggle" style="cursor:pointer; display: flex; flex-direction: column; gap: 3px;">
+            <span class="menu-line"></span>
+            <span class="menu-line"></span>
+            <span class="menu-line"></span>
+        </span>
+        <span>Inicio</span>
+    </a>
+    <div class="menu-horizontal" id="menu-horizontal">
+        <a href="/servicios/" class="menu-link">Servicios</a>
+        <a href="/reservarespacio/" class="menu-link">Reservas</a>
+        <a href="/contactanos/" class="menu-link">Contacto</a>
+    </div>
+    <!-- Botones superiores derechos -->
+    <div class="btns-superior-derecha">
+        <a href="{% url 'login' %}" class="btn-circular">
+            <!-- Icono usuario SVG -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+        </a>
+        <a href="{% url 'register' %}" class="btn-circular">
+            <!-- Icono flecha SVG -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </a>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer-vianapp">
+        <div class="footer-content">
+            <div class="footer-logo footer-logo-left">
+                <img src="{% static 'core/img/logofooter.png' %}" alt="VianApp Logo">
+            </div>
+            <div class="footer-info footer-info-horizontal">
+                <div class="footer-col">
+                    <span class="footer-title">Dirección</span><br>
+                    Calle 00-00 #00<br>
+                    Bogotá (ofi 57)<br>
+                    Edificio Gran San
+                </div>
+                <div class="footer-col">
+                    <span class="footer-title">Correo</span><br>
+                    ViANAppclientes@gmail.com
+                </div>
+                <div class="footer-col">
+                    <span class="footer-title">Teléfono</span><br>
+                    (+57)000000000<br>
+                    (+57)000000000
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <span>ViANApp &copy; Copyright 2025 | Todos los derechos reservados</span>
+        </div>
+    </footer>
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuHorizontal = document.getElementById('menu-horizontal');
+        let menuOpen = false;
+        menuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            menuOpen = !menuOpen;
+            menuHorizontal.style.display = menuOpen ? 'flex' : 'none';
+        });
+        // Cierra el menú si se hace click fuera
+        document.addEventListener('click', function(e) {
+            if (!menuToggle.contains(e.target) && !menuHorizontal.contains(e.target)) {
+                menuHorizontal.style.display = 'none';
+                menuOpen = false;
+            }
+        });
+    </script>
+</body>
+</html>

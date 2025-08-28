@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios</title>
+</head>
+<body>
+    {% block content %}
+        <div class="videocontainer">
+       <video autoplay muted loop playsinline id="bg-video">
+         <source src="{% static 'videos/videoservices.mp4' %}" type="video/mp4">
+           Tu navegador no soporta videos en HTML5.
+        </video>
+        <div class="overlay"></div>
+        <div class="textcontainer">
+          <h1>Recuerda que tambien tenemos un <span class="verde"> Aplicativo Movil </span></h1>
+          
+          <p>Accede a VIANApp desde tu celular.</p>
+
+          <p>lleva el <span class="verde">control de tus parqueaderos</span> en la palma de <br>
+          tu mano,Encuentra, <span class="verde">reserva</span> y <span class="verde">paga</span> tu <br>
+          estacionamiento de forma rapida y segura con <br>
+          nuestra <span class="verde">app Movil</span>  </p>
+
+          <div class="botones-stores">
+                <a href="#" class="btn-reserva">Descargar para IOS</a>
+                <a href="#" class="btn-reserva">Descargar para Android</a>
+                <p>Disponibles en IPhone & Android!,<br>
+                <Span class="azul">Descargala ya!</Span></p>
+
+           </div>
+  
+        </div>
+    </div>
+
+
+    <div class="textservices">
+        <h1>Todo lo que ofrecemos <br> para tu <span class="azul">comodidad</span></h1>
+         
+    </div>
+
+      <div class="logoservices">
+        <img src="{% static 'core/img/logoRnegro.png' %}" alt="VianApp Logo">
+        <div class="logonegro-texto">
+            Estaciona sin <span class="azul">estrés</span>, conduce con <span class="verde">confianza</span>
+        </div>
+        <button class="btn-contactar">Contactar</button>
+    </div>
+
+
+    {% endblock %}
+</body>
+</html>
