@@ -11,73 +11,85 @@
     {% block content %}
     <div class="register-outer">
         <div class="register-center">
-            <form class="register-form-vianapp">
+            <form class="register-form-vianapp" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="form-errors">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <p>{{ field.label }}: {{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
                 <h2 class="register-title verde">CREAR CUENTA</h2>
                 <p class="register-desc">Regístrate para recibir correos electrónicos y ser<br>el primero en recibir contenido nuevo<br>y ofertas exclusivas.</p>
                 <div class="register-row">
                     <div class="register-group">
-                        <label for="nombres">Nombres*</label>
-                        <input type="text" id="nombres" name="nombres" placeholder="Escribe tus nombres" required>
+                        {{ form.nombres.label_tag }}
+                        {{ form.nombres }}
                     </div>
                     <div class="register-group">
-                        <label for="apellidos">Apellidos*</label>
-                        <input type="text" id="apellidos" name="apellidos" placeholder="Escribe tus apellidos" required>
-                    </div>
-                </div>
-                <div class="register-row">
-                    <div class="register-group">
-                        <label for="email">Correo electrónico*</label>
-                        <input type="email" id="email" name="email" placeholder="Escribe tu correo electrónico" required>
-                    </div>
-                    <div class="register-group">
-                        <label for="telefono">Teléfono*</label>
-                        <input type="tel" id="telefono" name="telefono" placeholder="Escribe tu número de teléfono" required>
+                        {{ form.apellidos.label_tag }}
+                        {{ form.apellidos }}
                     </div>
                 </div>
                 <div class="register-row">
                     <div class="register-group">
-                        <label for="genero">Género</label>
-                        <select id="genero" name="genero">
-                            <option value="">Seleccione Género</option>
-                            <option value="masculino">Masculino</option>
-                            <option value="femenino">Femenino</option>
-                            <option value="otro">Otro</option>
-                        </select>
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
                     </div>
                     <div class="register-group">
-                        <label for="cedula">Cédula*</label>
-                        <input type="text" id="cedula" name="cedula" placeholder="Escribe tu cédula" required>
+                        {{ form.telefono.label_tag }}
+                        {{ form.telefono }}
                     </div>
                 </div>
                 <div class="register-row">
                     <div class="register-group">
-                        <label for="departamento">Departamento*</label>
-                        <select id="departamento" name="departamento" required>
-                            <option value="">Selecciona</option>
-                            <option value="bogota">Bogotá</option>
-                            <option value="cundinamarca">Cundinamarca</option>
-                            <option value="antioquia">Antioquia</option>
-                            <!-- Agrega más departamentos aquí -->
-                        </select>
+                        {{ form.genero.label_tag }}
+                        {{ form.genero }}
                     </div>
                     <div class="register-group">
-                        <label for="municipio">Municipio*</label>
-                        <select id="municipio" name="municipio" required>
-                            <option value="">Selecciona</option>
-                            <option value="bogota">Bogotá</option>
-                            <option value="soacha">Soacha</option>
-                            <option value="medellin">Medellín</option>
-                            <!-- Agrega más municipios aquí -->
-                        </select>
+                        {{ form.cedula.label_tag }}
+                        {{ form.cedula }}
+                    </div>
+                </div>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.departamento.label_tag }}
+                        {{ form.departamento }}
+                    </div>
+                    <div class="register-group">
+                        {{ form.municipio.label_tag }}
+                        {{ form.municipio }}
                     </div>
                 </div>
                 <div class="register-group">
                     <label for="placa">Tarjeta de propiedad de tu vehículo*</label>
                     <div class="register-placa-row">
-                        <input type="text" id="placa" name="placa" placeholder="Escribe tu placa" required>
-                        <input type="file" id="tarjeta" name="tarjeta" accept="image/*" style="max-width: 180px;">
+                        {{ form.placa }}
+                        {{ form.tarjeta }}
                     </div>
                     <small class="register-help">Escribe tu placa y sube una foto de la tarjeta de propiedad para confirmar que eres su dueño y así podrás reservar sin ningún problema.</small>
+                </div>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                    </div>
+                    <div class="register-group">
+                        {{ form.password.label_tag }}
+                        {{ form.password }}
+                    </div>
+                </div>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.rol.label_tag }}
+                        {{ form.rol }}
+                    </div>
                 </div>
                 <button type="submit" class="btn-register-main">Crear cuenta</button>
             </form>

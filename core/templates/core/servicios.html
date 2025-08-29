@@ -14,8 +14,8 @@
          <source src="{% static 'videos/videoservices.mp4' %}" type="video/mp4">
            Tu navegador no soporta videos en HTML5.
         </video>
-        <div class="overlay"></div>
-        <div class="textcontainer">
+        <div class="overlay">
+        <div class="textcontainerservices">
           <h1>Recuerda que tambien tenemos un <span class="verde"> Aplicativo Movil </span></h1>
           
           <p>Accede a VIANApp desde tu celular.</p>
@@ -34,23 +34,95 @@
            </div>
   
         </div>
+        <div class="movilimg-container">
+          <img src="{% static 'core/img/movilimg.png' %}" alt="App Movil" class="movilimg-img">
+        </div>
+        </div>
+
     </div>
-
-
-    <div class="textservices">
+    <div class="textservices-carrusel-container">
+      <div class="textservices-carrusel-left">
         <h1>Todo lo que ofrecemos <br> para tu <span class="azul">comodidad</span></h1>
-         
+        <div class="carrusel-nav">
+          <button class="carrusel-btn" id="carrusel-prev">&#60;</button>
+          <button class="carrusel-btn" id="carrusel-next">&#62;</button>
+        </div>
+      </div>
+      <div class="textservices-carrusel-center">
+        <div class="carrusel-slide active">
+          <img src="{% static 'core/img/carrusel1.png' %}" alt="Reservar" class="carrusel-img">
+          <div class="carrusel-info">
+            <h3 class="carrusel-title azul">Reserva en línea y por app</h3>
+            <p>Encuentra y aparta tu parqueadero antes de llegar, ahorrando tiempo y evitando filas.</p>
+          </div>
+        </div>
+        <div class="carrusel-slide">
+          <img src="{% static 'core/img/carrusel2.png' %}" alt="Pagos" class="carrusel-img">
+          <div class="carrusel-info">
+            <h3 class="carrusel-title azul">Pagos fáciles y con efectivo</h3>
+            <p>Paga desde tu celular o con tarjeta e incluso en efectivo de forma rápida y segura.</p>
+          </div>
+        </div>
+        <!-- Puedes agregar más slides aquí -->
+      </div>
     </div>
 
-      <div class="logoservices">
-        <img src="{% static 'core/img/logoRnegro.png' %}" alt="VianApp Logo">
+    <div class="ovalocontainer">
+     <div class="logonegro">
+        <img src="{% static 'core/img/logoPvian.png' %}" alt="VianApp Logo">
         <div class="logonegro-texto">
             Estaciona sin <span class="azul">estrés</span>, conduce con <span class="verde">confianza</span>
         </div>
         <button class="btn-contactar">Contactar</button>
     </div>
+    </div>
 
+
+    <div class="textvalor">
+        <h1>Nuestros valores <span class="azul">diferenciales</span></h1>
+        <div class="valores-cards-container">
+            <div class="valor-card">
+                <div class="valor-card-img"></div>
+                <h2 class="valor-card-title verde">EXCLUSIVIDAD</h2>
+                <p class="valor-card-desc">Diseñada específicamente para conjuntos y edificios residenciales, integrando residentes, propietarios, administradores y visitantes en una sola plataforma.</p>
+            </div>
+            <div class="valor-card">
+                <div class="valor-card-img"></div>
+                <h2 class="valor-card-title verde">GESTIÓN INTELIGENTE</h2>
+                <p class="valor-card-desc">Reserva, pago y validación de acceso en tiempo real, con verificación de usuarios y control de vehículos autorizados.</p>
+            </div>
+            <div class="valor-card">
+                <div class="valor-card-img"></div>
+                <h2 class="valor-card-title verde">BENEFICIOS COMPARTIDOS</h2>
+                <p class="valor-card-desc">Conecta a quienes necesitan parqueo con quienes tienen espacios subutilizados, generando ingresos pasivos para propietarios y optimizando el uso del espacio privado.</p>
+            </div>
+        </div>
+    </div>
 
     {% endblock %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const slides = document.querySelectorAll('.carrusel-slide');
+      const prevBtn = document.getElementById('carrusel-prev');
+      const nextBtn = document.getElementById('carrusel-next');
+      let current = 0;
+      function showSlide(idx) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('active', i === idx);
+        });
+      }
+      if (prevBtn && nextBtn && slides.length > 0) {
+        prevBtn.onclick = function() {
+          current = (current - 1 + slides.length) % slides.length;
+          showSlide(current);
+        };
+        nextBtn.onclick = function() {
+          current = (current + 1) % slides.length;
+          showSlide(current);
+        };
+        showSlide(current); // Inicializa el primer slide
+      }
+    });
+    </script>
 </body>
 </html>

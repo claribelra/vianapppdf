@@ -1,0 +1,119 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Mapa | VianApp{% endblock %}
+{% block content %}
+<div class="container my-4 position-relative" style="z-index: 2;">
+    <div id="ubicacion-actual" style="position: absolute; top: 18px; left: 50%; transform: translateX(-50%); z-index: 10; background: #fff; border-radius: 18px; box-shadow: 0 2px 12px rgba(33,150,243,0.10); padding: 8px 22px; display: none; align-items: center; gap: 10px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/64/64113.png" alt="Ubicación" style="width: 28px; height: 28px; vertical-align: middle;">
+        <span style="color: #2196f3; font-weight: 700; font-size: 1.08rem;">Tu ubicación actual</span>
+    </div>
+    <div id="ubicacion-error" style="position: absolute; top: 60px; left: 50%; transform: translateX(-50%); z-index: 10; background: #fff3f3; border-radius: 18px; box-shadow: 0 2px 12px rgba(255,0,0,0.10); padding: 8px 22px; display: none; align-items: center; gap: 10px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828665.png" alt="Error" style="width: 24px; height: 24px; vertical-align: middle;">
+        <span style="color: #d32f2f; font-weight: 700; font-size: 1.08rem;">No se pudo obtener tu ubicación. Activa los permisos de ubicación en tu navegador.</span>
+    </div>
+    <div id="map" style="height: 500px; width: 100%; border-radius: 12px; z-index: 1;"></div>
+    <div class="buscador-container mt-4 p-4" style="background: #eaf1fb; border-radius: 16px; box-shadow: 0 2px 16px rgba(33,150,243,0.10); max-width: 600px; margin: 32px auto 0 auto; z-index: 2; position: relative;">
+        <h2 class="text-center mb-3" style="color: #2196f3; font-weight: 800; font-size: 2rem;">Encuentra tu parqueadero cercano</h2>
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-md-7 mb-2">
+                <input id="searchInput" type="text" class="form-control" placeholder="Buscar parqueadero por nombre o dirección..." style="border-radius: 8px; border: 1.5px solid #2196f3; font-size: 1.1rem;">
+            </div>
+            <div class="col-12 col-md-5 mb-2">
+                <select id="citySelect" class="form-select" style="border-radius: 8px; border: 1.5px solid #43a047; font-size: 1.1rem;">
+                    <option value="">Todas las ciudades</option>
+                    <option value="Bogotá">Bogotá</option>
+                    <option value="Medellín">Medellín</option>
+                    <option value="Cali">Cali</option>
+                    <option value="Neiva">Neiva</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Leaflet CDN -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var map = L.map('map').setView([4.7110, -74.0721], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Marcador de ubicación del usuario
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var userMarker = L.marker([position.coords.latitude, position.coords.longitude], {
+                    icon: L.icon({
+                        iconUrl: 'https://cdn-icons-png.flaticon.com/512/64/64113.png', // icono personalizado
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32],
+                        popupAnchor: [0, -32]
+                    })
+                }).addTo(map)
+                  .bindPopup('<strong>¡Estás aquí!</strong>').openPopup();
+                map.setView([position.coords.latitude, position.coords.longitude], 15);
+                // Mostrar el badge de ubicación actual
+                var ubicacionDiv = document.getElementById('ubicacion-actual');
+                ubicacionDiv.style.display = 'flex';
+            }, function(error) {
+                // Mostrar mensaje de error si no se obtiene la ubicación
+                var errorDiv = document.getElementById('ubicacion-error');
+                errorDiv.style.display = 'flex';
+                // Mostrar el error en consola para depuración
+                console.error('Error de geolocalización:', error);
+            });
+        }
+
+        // --- Marcadores de parqueaderos registrados ---
+        var markers = [];
+        {% for p in parqueaderos %}
+        var lat = parseFloat("{{ p.latitud|default:'0' }}");
+        var lng = parseFloat("{{ p.longitud|default:'0' }}");
+        var ciudad = "{{ p.ciudad|escapejs }}";
+        var nombre = "{{ p.nombre_parqueadero|escapejs }}";
+        var direccion = "{{ p.direccion|escapejs }}";
+        var tarifaHora = "{{ p.tarifa_hora|default:'No disponible' }}";
+        var cupos = "{{ p.cupos_disponibles|default:'No disponible' }}";
+        var popupContent = `<div style="text-align:center;">
+            <img src="{% if p.imagen %}{{ p.imagen.url }}{% else %}{% static 'img/imgparking1.jpg' %}{% endif %}" alt="Imagen Parqueadero" style="width:80px;height:60px;object-fit:cover;border-radius:6px;margin-bottom:6px;">
+            <br><strong>${nombre}</strong>
+            <br><span style="font-size:0.95em;">${direccion}, ${ciudad}</span>
+            <br><span style="font-size:0.95em;">Tel: {{ p.telefono|escapejs }}</span>
+            <br><span style='font-size:0.95em;'>Tarifa/hora: $${tarifaHora}</span>
+            <br><span style='font-size:0.95em;'>Cupos disponibles: ${cupos}</span>
+            <br><a href="{% url 'reservar' p.id %}" class="btn btn-sm btn-success mt-2">Reservar cupo</a>
+            </div>`;
+        if (!isNaN(lat) && !isNaN(lng)) {
+            var marker = L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
+            marker.parqueaderoData = {
+                nombre: nombre,
+                direccion: direccion,
+                ciudad: ciudad
+            };
+            markers.push(marker);
+        }
+        {% endfor %}
+
+        // --- Filtro por búsqueda y ciudad ---
+        function filtrarMarcadores() {
+            var texto = document.getElementById('searchInput').value.toLowerCase();
+            var ciudad = document.getElementById('citySelect').value;
+            markers.forEach(function(marker) {
+                var coincide = (
+                    (!ciudad || marker.parqueaderoData.ciudad === ciudad) &&
+                    (marker.parqueaderoData.nombre.toLowerCase().includes(texto) || marker.parqueaderoData.direccion.toLowerCase().includes(texto))
+                );
+                if (coincide) {
+                    map.addLayer(marker);
+                } else {
+                    map.removeLayer(marker);
+                }
+            });
+        }
+        document.getElementById('searchInput').addEventListener('input', filtrarMarcadores);
+        document.getElementById('citySelect').addEventListener('change', filtrarMarcadores);
+    });
+</script>
+{% endblock %}

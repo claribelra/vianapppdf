@@ -24,14 +24,28 @@
     </div>
     <!-- Botones superiores derechos -->
     <div class="btns-superior-derecha">
-        <a href="{% url 'login' %}" class="btn-circular">
-            <!-- Icono usuario SVG -->
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
-        </a>
-        <a href="{% url 'register' %}" class="btn-circular">
-            <!-- Icono flecha SVG -->
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        </a>
+        {% if user.is_authenticated %}
+            <div class="user-menu-container">
+                <a href="#" class="btn-circular" id="user-menu-toggle">
+                    <!-- Icono usuario SVG -->
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+                </a>
+                <div class="user-menu-dropdown" id="user-menu-dropdown" style="display:none;">
+                    <div class="user-menu-name">{{ user.profile.nombres }} {{ user.profile.apellidos }}</div>
+                    <a href="{% url 'profile' %}" class="user-menu-link">Mi perfil</a>
+                    <a href="{% url 'logout' %}" class="user-menu-link">Cerrar sesión</a>
+                </div>
+            </div>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn-circular">
+                <!-- Icono usuario SVG -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+            </a>
+            <a href="{% url 'register' %}" class="btn-circular">
+                <!-- Icono flecha SVG -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        {% endif %}
     </div>
 
     {% block content %}{% endblock %}
@@ -79,6 +93,22 @@
             if (!menuToggle.contains(e.target) && !menuHorizontal.contains(e.target)) {
                 menuHorizontal.style.display = 'none';
                 menuOpen = false;
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggle = document.getElementById('user-menu-toggle');
+            var dropdown = document.getElementById('user-menu-dropdown');
+            if (toggle && dropdown) {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                });
+                document.addEventListener('click', function(e) {
+                    if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                });
             }
         });
     </script>

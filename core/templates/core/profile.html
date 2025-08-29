@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi perfil</title>
+</head>
+<body>
+    {% block content %}
+    <div class="profile-outer">
+        <h1 class="azul">Mi perfil</h1>
+        <div class="profile-card">
+            <div class="profile-row">
+                <span class="profile-label">Nombre:</span>
+                <span class="profile-value">{{ profile.nombres }} {{ profile.apellidos }}</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Correo:</span>
+                <span class="profile-value">{{ user.email }}</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Teléfono:</span>
+                <span class="profile-value">{{ profile.telefono }}</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Género:</span>
+                <span class="profile-value">{{ profile.genero }}</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Cédula:</span>
+                <span class="profile-value">{{ profile.cedula }}</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Departamento:</span>
+                <span class="profile-value">{{ profile.departamento }}</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Municipio:</span>
+                <span class="profile-value">{{ profile.municipio }}</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Placa:</span>
+                <span class="profile-value">{{ profile.placa }}</span>
+            </div>
+            <div class="profile-row">
+                <span class="profile-label">Rol:</span>
+                <span class="profile-value">{{ profile.rol|title }}</span>
+            </div>
+            {% if profile.tarjeta %}
+            <div class="profile-row">
+                <span class="profile-label">Tarjeta de propiedad:</span>
+                <span class="profile-value"><img src="{{ profile.tarjeta.url }}" alt="Tarjeta" style="max-width:180px; border-radius:8px;" /></span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>
