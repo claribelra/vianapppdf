@@ -26,4 +26,7 @@ urlpatterns = [
     path('mapcliente/', mapcliente_view, name='mapcliente'),
     path('profile/', profile, name='profile'),
     path('logout/', logout_view, name='logout'),
+    path('registro-parqueadero/', views.register_parqueadero, name='register_parqueadero'),
+    path('mapa-parqueadero/<int:pk>/', views.mapa_parqueadero, name='mapa_parqueadero'),
+    path('reservarcliente/<int:pk>/', views.reservarcliente_view, name='reservarcliente'),
 ]

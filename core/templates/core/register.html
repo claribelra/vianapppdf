@@ -91,8 +91,14 @@
                         {{ form.rol }}
                     </div>
                 </div>
+                <div style="text-align:center; margin-bottom:12px;">
+                    <a href="{% url 'register_parqueadero' %}" style="color:#43a047; font-weight:600; text-decoration:underline; font-size:1rem;">Registrarse como parqueadero</a>
+                </div>
                 <button type="submit" class="btn-register-main">Crear cuenta</button>
             </form>
+            <div class="login-btns">
+                <a href="{% url 'register' %}" class="btn-login-secondary">Crear cuenta</a>
+            </div>
         </div>
     </div>
     {% endblock %}

@@ -23,3 +23,21 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.rol}"
+
+class ParqueaderoPrivado(models.Model):
+    nombre_dueno = models.CharField(max_length=100)
+    documento_tipo = models.CharField(max_length=20)
+    documento_numero = models.CharField(max_length=30)
+    telefono = models.CharField(max_length=20)
+    email = models.EmailField()
+    direccion = models.CharField(max_length=200)
+    nombre_comercial = models.CharField(max_length=100, blank=True, null=True)
+    espacios = models.PositiveIntegerField()
+    tipos_vehiculos = models.CharField(max_length=100)  # Coma separados
+    ubicacion_mapa = models.CharField(max_length=200, blank=True, null=True)
+    politicas = models.TextField(blank=True, null=True)
+    foto_dueno = models.ImageField(upload_to='duenos_fotos/')
+    foto_parqueadero = models.ImageField(upload_to='parqueaderos_fotos/')
+    
+    def __str__(self):
+        return f"{self.nombre_comercial or self.direccion} ({self.nombre_dueno})"

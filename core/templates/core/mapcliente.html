@@ -46,7 +46,7 @@
             navigator.geolocation.getCurrentPosition(function(position) {
                 var userMarker = L.marker([position.coords.latitude, position.coords.longitude], {
                     icon: L.icon({
-                        iconUrl: 'https://cdn-icons-png.flaticon.com/512/64/64113.png', // icono personalizado
+                        iconUrl: 'https://cdn-icons-png.flaticon.com/512/64/64113.png',
                         iconSize: [32, 32],
                         iconAnchor: [16, 32],
                         popupAnchor: [0, -32]
@@ -54,47 +54,56 @@
                 }).addTo(map)
                   .bindPopup('<strong>¡Estás aquí!</strong>').openPopup();
                 map.setView([position.coords.latitude, position.coords.longitude], 15);
-                // Mostrar el badge de ubicación actual
                 var ubicacionDiv = document.getElementById('ubicacion-actual');
                 ubicacionDiv.style.display = 'flex';
             }, function(error) {
-                // Mostrar mensaje de error si no se obtiene la ubicación
                 var errorDiv = document.getElementById('ubicacion-error');
                 errorDiv.style.display = 'flex';
-                // Mostrar el error en consola para depuración
                 console.error('Error de geolocalización:', error);
             });
         }
 
         // --- Marcadores de parqueaderos registrados ---
-        var markers = [];
-        {% for p in parqueaderos %}
-        var lat = parseFloat("{{ p.latitud|default:'0' }}");
-        var lng = parseFloat("{{ p.longitud|default:'0' }}");
-        var ciudad = "{{ p.ciudad|escapejs }}";
-        var nombre = "{{ p.nombre_parqueadero|escapejs }}";
-        var direccion = "{{ p.direccion|escapejs }}";
-        var tarifaHora = "{{ p.tarifa_hora|default:'No disponible' }}";
-        var cupos = "{{ p.cupos_disponibles|default:'No disponible' }}";
-        var popupContent = `<div style="text-align:center;">
-            <img src="{% if p.imagen %}{{ p.imagen.url }}{% else %}{% static 'img/imgparking1.jpg' %}{% endif %}" alt="Imagen Parqueadero" style="width:80px;height:60px;object-fit:cover;border-radius:6px;margin-bottom:6px;">
-            <br><strong>${nombre}</strong>
-            <br><span style="font-size:0.95em;">${direccion}, ${ciudad}</span>
-            <br><span style="font-size:0.95em;">Tel: {{ p.telefono|escapejs }}</span>
-            <br><span style='font-size:0.95em;'>Tarifa/hora: $${tarifaHora}</span>
-            <br><span style='font-size:0.95em;'>Cupos disponibles: ${cupos}</span>
-            <br><a href="{% url 'reservar' p.id %}" class="btn btn-sm btn-success mt-2">Reservar cupo</a>
-            </div>`;
-        if (!isNaN(lat) && !isNaN(lng)) {
-            var marker = L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
-            marker.parqueaderoData = {
-                nombre: nombre,
-                direccion: direccion,
-                ciudad: ciudad
-            };
-            markers.push(marker);
+        var parqueaderosJson = '{{ parqueaderos_json|escapejs }}';
+        var parqueaderos = [];
+        try {
+            if (parqueaderosJson && parqueaderosJson !== '[]') {
+                parqueaderos = JSON.parse(parqueaderosJson);
+            }
+        } catch (e) {
+            console.error('Error al parsear parqueaderos_json:', e);
         }
-        {% endfor %}
+
+        var markers = [];
+        parqueaderos.forEach(function(p) {
+            var lat = parseFloat(p.latitud);
+            var lng = parseFloat(p.longitud);
+            var ciudad = p.ciudad;
+            var nombre = p.nombre_comercial || p.direccion;
+            var direccion = p.direccion;
+            var tarifaHora = p.tarifa_hora || 'No disponible';
+            var cupos = p.espacios || 'No disponible';
+            var telefono = p.telefono;
+            var foto = p.foto_parqueadero || '/static/core/img/imgparking1.jpg';
+            var popupContent = `<div style='text-align:center;'>
+                <img src="${foto}" alt="Imagen Parqueadero" style="width:80px;height:60px;object-fit:cover;border-radius:6px;margin-bottom:6px;">
+                <br><strong>${nombre}</strong>
+                <br><span style="font-size:0.95em;">${direccion}, ${ciudad}</span>
+                <br><span style="font-size:0.95em;">Tel: ${telefono}</span>
+                <br><span style='font-size:0.95em;'>Tarifa/hora: $${tarifaHora}</span>
+                <br><span style='font-size:0.95em;'>Cupos disponibles: ${cupos}</span>
+                <br><a href="/reservarcliente/${p.id}/" class="btn btn-sm btn-success mt-2">Reservar cupo</a>
+                </div>`;
+            if (!isNaN(lat) && !isNaN(lng)) {
+                var marker = L.marker([lat, lng]).addTo(map).bindPopup(popupContent);
+                marker.parqueaderoData = {
+                    nombre: nombre,
+                    direccion: direccion,
+                    ciudad: ciudad
+                };
+                markers.push(marker);
+            }
+        });
 
         // --- Filtro por búsqueda y ciudad ---
         function filtrarMarcadores() {

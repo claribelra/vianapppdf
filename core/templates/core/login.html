@@ -27,12 +27,12 @@
                 {% endif %}
                 <h2 class="register-title verde">INICIAR SESIÓN</h2>
                 <p class="register-desc">Introduce tus datos para acceder a tu cuenta.</p>
-                <div class="register-row">
-                    <div class="register-group">
+                <div class="register-row" style="flex-direction:column; gap:18px; align-items:center;">
+                    <div class="register-group" style="width:100%; max-width:340px;">
                         {{ form.username.label_tag }}
                         {{ form.username }}
                     </div>
-                    <div class="register-group">
+                    <div class="register-group" style="width:100%; max-width:340px;">
                         {{ form.password.label_tag }}
                         {{ form.password }}
                     </div>

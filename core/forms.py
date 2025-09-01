@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, ParqueaderoPrivado
 
 class UserRegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label='Contraseña')
@@ -22,5 +22,33 @@ class UserRegisterForm(forms.ModelForm):
         fields = ['username', 'email', 'password']
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField(label='Usuario')
+    username = forms.CharField(label='Usuario o correo electrónico', widget=forms.TextInput(attrs={'placeholder': 'Usuario o correo electrónico'}))
     password = forms.CharField(widget=forms.PasswordInput, label='Contraseña')
+
+class ParqueaderoPrivadoForm(forms.ModelForm):
+    DOCUMENTO_CHOICES = [
+        ('CC', 'Cédula de ciudadanía'),
+        ('CE', 'Cédula de extranjería'),
+        ('NIT', 'NIT'),
+        ('PAS', 'Pasaporte'),
+        ('Otro', 'Otro'),
+    ]
+    documento_tipo = forms.ChoiceField(choices=DOCUMENTO_CHOICES, required=True, label='Tipo de documento')
+    password = forms.CharField(widget=forms.PasswordInput, label='Contraseña', required=True)
+
+    class Meta:
+        model = ParqueaderoPrivado
+        fields = [
+            'nombre_dueno', 'documento_tipo', 'documento_numero', 'telefono', 'email',
+            'direccion', 'nombre_comercial', 'espacios', 'tipos_vehiculos',
+            'ubicacion_mapa', 'politicas', 'foto_dueno', 'foto_parqueadero', 'password'
+        ]
+        widgets = {
+            'tipos_vehiculos': forms.TextInput(attrs={'placeholder': 'Ejemplo: carros, motos, bicicletas'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['foto_dueno'].required = True
+        self.fields['foto_parqueadero'].required = True
+        self.fields['password'].required = True

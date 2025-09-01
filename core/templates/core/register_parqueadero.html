@@ -1,0 +1,107 @@
+{% extends 'core/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Parqueadero Privado</title>
+</head>
+<body>
+    {% block content %}
+    <div class="register-outer">
+        <div class="register-center">
+            <form class="register-form-vianapp" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="form-errors">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <p>{{ field.label }}: {{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <h2 class="register-title verde">REGISTRO PARQUEADERO PRIVADO</h2>
+                <p class="register-desc">Registra tu parqueadero privado para ofrecer espacios seguros y confiables a nuestros usuarios.</p>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.nombre_dueno.label_tag }}
+                        {{ form.nombre_dueno }}
+                    </div>
+                    <div class="register-group">
+                        {{ form.documento_tipo.label_tag }}
+                        {{ form.documento_tipo }}
+                    </div>
+                </div>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.documento_numero.label_tag }}
+                        {{ form.documento_numero }}
+                    </div>
+                    <div class="register-group">
+                        {{ form.telefono.label_tag }}
+                        {{ form.telefono }}
+                    </div>
+                </div>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                    </div>
+                    <div class="register-group">
+                        {{ form.password.label_tag }}
+                        {{ form.password }}
+                    </div>
+                </div>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.direccion.label_tag }}
+                        {{ form.direccion }}
+                    </div>
+                </div>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.nombre_comercial.label_tag }}
+                        {{ form.nombre_comercial }}
+                    </div>
+                    <div class="register-group">
+                        {{ form.espacios.label_tag }}
+                        {{ form.espacios }}
+                    </div>
+                </div>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.tipos_vehiculos.label_tag }}
+                        {{ form.tipos_vehiculos }}
+                    </div>
+                    <div class="register-group">
+                        {{ form.ubicacion_mapa.label_tag }}
+                        {{ form.ubicacion_mapa }}
+                        <small class="register-help" style="color:#d32f2f;font-weight:600;">Ejemplo: 4.7110,-74.0721. Si no ingresas una ubicación válida, tu parqueadero no aparecerá en el mapa del cliente.</small>
+                    </div>
+                </div>
+                <div class="register-group">
+                    {{ form.politicas.label_tag }}
+                    {{ form.politicas }}
+                </div>
+                <div class="register-group">
+                    {{ form.foto_dueno.label_tag }}
+                    {{ form.foto_dueno }}
+                    <small class="register-help">Sube una foto tuya para mayor seguridad y confianza en la plataforma.</small>
+                </div>
+                <div class="register-group">
+                    {{ form.foto_parqueadero.label_tag }}
+                    {{ form.foto_parqueadero }}
+                    <small class="register-help">Sube una foto del parqueadero para mostrar a los usuarios.</small>
+                </div>
+                <button type="submit" class="btn-register-main">Registrar parqueadero</button>
+            </form>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

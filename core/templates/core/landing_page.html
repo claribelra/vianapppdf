@@ -2,6 +2,11 @@
 {% load static %}
 {% block title %}Landing VianApp{% endblock %}
 {% block content %}
+    {% if messages %}
+      <div style="width:100%;background:#ffebee;color:#d32f2f;padding:12px 0;text-align:center;font-weight:600;font-size:1.08rem;position:fixed;top:0;left:0;z-index:999;">
+        {% for message in messages %}{{ message }}{% endfor %}
+      </div>
+    {% endif %}
     <!-- Sección de video -->
     <div class="videocontainer">
        <video autoplay muted loop playsinline id="bg-video">
@@ -60,15 +65,20 @@
             </div>
         </div>
     </div>
+
+
     <div class="ovalocontainer">
-    <div class="logonegro">
+     <div class="logonegro">
         <img src="{% static 'core/img/logoPvian.png' %}" alt="VianApp Logo">
         <div class="logonegro-texto">
             Estaciona sin <span class="azul">estrés</span>, conduce con <span class="verde">confianza</span>
         </div>
         <button class="btn-contactar">Contactar</button>
+     </div>
     </div>
-    </div>
+
+
+
    
     <!-- Texto de compromiso -->
     <div class="texto">
