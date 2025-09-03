@@ -81,25 +81,25 @@ def register_parqueadero(request):
     if request.method == 'POST':
         form = ParqueaderoPrivadoForm(request.POST, request.FILES)
         if form.is_valid():
-            # Crear usuario para el parqueadero
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             nombre_dueno = form.cleaned_data['nombre_dueno']
-            # Usar email como username
-            user = User.objects.create_user(username=email, email=email, password=password, first_name=nombre_dueno)
-            # Crear perfil con rol parqueadero
-            Profile.objects.create(
-                user=user,
-                rol='parqueadero',
-                nombres=nombre_dueno,
-                telefono=form.cleaned_data['telefono'],
-                cedula=form.cleaned_data['documento_numero']
-            )
-            # Guardar datos del parqueadero
-            parqueadero = form.save(commit=False)
-            parqueadero.email = email
-            parqueadero.save()
-            return redirect('login')
+            # Verificar si el usuario ya existe
+            if User.objects.filter(username=email).exists():
+                form.add_error('email', 'Ya existe un usuario con este correo electrónico.')
+            else:
+                user = User.objects.create_user(username=email, email=email, password=password, first_name=nombre_dueno)
+                Profile.objects.create(
+                    user=user,
+                    rol='parqueadero',
+                    nombres=nombre_dueno,
+                    telefono=form.cleaned_data['telefono'],
+                    cedula=form.cleaned_data['documento_numero']
+                )
+                parqueadero = form.save(commit=False)
+                parqueadero.email = email
+                parqueadero.save()
+                return redirect('login')
     else:
         form = ParqueaderoPrivadoForm()
     return render(request, 'core/register_parqueadero.html', {'form': form})
@@ -113,17 +113,9 @@ def mapa_parqueadero(request, pk):
         messages.error(request, 'Inicia sesión como parqueadero para acceder a esta vista.')
         return redirect('landing_page')
     parqueadero = get_object_or_404(ParqueaderoPrivado, pk=pk)
-    # Procesar ubicacion_mapa para obtener lat/lng
-    lat, lng = 4.7110, -74.0721  # Default Bogotá
-    ubicacion = parqueadero.ubicacion_mapa.strip() if parqueadero.ubicacion_mapa else ''
-    if ubicacion:
-        try:
-            partes = ubicacion.split(',')
-            if len(partes) == 2:
-                lat = float(partes[0])
-                lng = float(partes[1])
-        except Exception:
-            pass
+    # Usar latitud y longitud directamente
+    lat = float(parqueadero.latitud) if parqueadero.latitud is not None else 4.7110
+    lng = float(parqueadero.longitud) if parqueadero.longitud is not None else -74.0721
     parqueadero.latitud = lat
     parqueadero.longitud = lng
 
@@ -141,28 +133,36 @@ def mapa_parqueadero(request, pk):
 
     return render(request, 'core/maparqueadero.html', {'parqueadero': parqueadero})
 
+
 @login_required
 def mapcliente_view(request):
     if not hasattr(request.user, 'profile') or request.user.profile.rol != 'cliente':
         messages.error(request, 'Inicia sesión como cliente para acceder a esta vista.')
         return redirect('landing_page')
+
     parqueaderos = ParqueaderoPrivado.objects.all()
-    parqueaderos_list = [
-        {
-            'id': p.id,
-            'latitud': float(p.ubicacion_mapa.split(',')[0]) if p.ubicacion_mapa and ',' in p.ubicacion_mapa else None,
-            'longitud': float(p.ubicacion_mapa.split(',')[1]) if p.ubicacion_mapa and ',' in p.ubicacion_mapa else None,
-            'ciudad': getattr(p, 'ciudad', ''),
-            'nombre_comercial': p.nombre_comercial,
-            'direccion': p.direccion,
-            'tarifa_hora': getattr(p, 'tarifa_hora', ''),
-            'espacios': p.espacios,
-            'telefono': p.telefono,
-            'foto_parqueadero': p.foto_parqueadero.url if p.foto_parqueadero else '/static/core/img/imgparking1.jpg',
-        } for p in parqueaderos if p.ubicacion_mapa and ',' in p.ubicacion_mapa
-    ]
-    parqueaderos_json = json.dumps(parqueaderos_list)
-    return render(request, 'core/mapcliente.html', {'parqueaderos_json': parqueaderos_json, 'parqueaderos_list': parqueaderos_list})
+    parqueaderos_list = []
+    for p in parqueaderos:
+        if p.latitud and p.longitud:
+            parqueaderos_list.append({
+                "id": p.id,
+                "nombre_comercial": p.nombre_comercial,
+                "direccion": p.direccion,
+                "ciudad": getattr(p, "ciudad", ""),
+                "latitud": float(p.latitud),
+                "longitud": float(p.longitud),
+                "telefono": p.telefono,
+                "tarifa_hora": str(getattr(p, "tarifa_hora", "")),
+                "espacios": p.espacios,
+                "foto_parqueadero": p.foto_parqueadero.url if p.foto_parqueadero else "/static/core/img/imgparking1.jpg",
+            })
+
+    # 🔎 Debug en terminal
+    print("📌 Parqueaderos enviados al template:", parqueaderos_list)
+
+    return render(request, "core/mapcliente.html", {
+        "parqueaderos_json": json.dumps(parqueaderos_list),  # lo mandamos como JSON string
+    })
 
 @login_required
 def reservarcliente_view(request, pk):

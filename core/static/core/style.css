@@ -67,44 +67,76 @@ body {
 }
 
 .textcontainerservices {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
     z-index: 3;
     color: white;
     text-align: left;
-    z-index: 2;
-    padding-left: 2vw;
     max-width: 480px;
-    flex: 1 1 0;
+    width: 40vw;
+    min-width: 320px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: flex-start;
+    padding-left: 3vw;
+    padding-right: 2vw;
 }
-@media (max-width: 600px) {
+.textcontainerservices h1 {
+    font-size: var(--textservices-h1-size, 2.1rem);
+    font-weight: 800;
+    margin-bottom: 18px;
+    line-height: 1.1;
+}
+.textcontainerservices p {
+    font-size: var(--textservices-p-size, 1.15rem);
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+@media (max-width: 900px) {
     .textcontainerservices {
-        padding-left: 8px;
+        position: static;
+        transform: none;
+        width: 98vw;
         max-width: 98vw;
-        top: 2vw;
+        min-width: 0;
+        padding-left: 8px;
+        padding-right: 8px;
+        align-items: center;
+        text-align: center;
+    }
+    .textcontainerservices h1 {
+        font-size: 1.4rem;
+    }
+    .textcontainerservices p {
+        font-size: 1rem;
     }
 }
 
 .movilimg-container {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
     z-index: 3;
     flex: 1 1 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    padding-right: 2vw;
+    padding-right: 3vw;
+    width: 40vw;
+    min-width: 320px;
 }
 .movilimg-img {
     width: 320px;
     max-width: 90vw;
     height: auto;
-    box-shadow: none; /* Elimina la sombra */
+    box-shadow: none;
     border-radius: 18px;
-    margin-left: 59%;
-    background: transparent; /* Sin fondo */
+    background: transparent;
+    margin-left: 0;
 }
 @media (max-width: 900px) {
     .videocontainer {
@@ -125,16 +157,21 @@ body {
         text-align: center;
     }
     .movilimg-container {
+        position: static;
+        transform: none;
+        width: 98vw;
+        min-width: 0;
+        align-items: center;
+        justify-content: center;
         padding-right: 0;
         margin: 24px auto 0 auto;
-        width: 100%;
     }
     .movilimg-img {
         width: 220px;
         max-width: 98vw;
     }
     .logo-text-img {
-        max-width: 220px;
+        max-width: 1000px;
     }
     .botones-container {
         flex-direction: column;
@@ -492,8 +529,8 @@ footer {
 /* Logo text image */
 .logo-text-img {
     display: block;
-    margin: 0 auto 18px auto;
-    max-width: 320px;
+    margin: 0 auto 8px auto; /* Menos espacio debajo del logo */
+    max-width: 360px;        /* Logo más grande */
     height: auto;
     z-index: 4;
 }

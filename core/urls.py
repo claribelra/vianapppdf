@@ -5,9 +5,6 @@ from django.contrib.auth import logout as auth_logout
 from . import views
 from .views import register, login_view
 
-def mapcliente_view(request):
-    return render(request, 'core/mapcliente.html')
-
 @login_required
 def profile(request):
     return render(request, 'core/profile.html', {'user': request.user, 'profile': request.user.profile})
@@ -23,7 +20,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('register/', register, name='register'),
     path('servicios/', views.servicios, name='servicios'),
-    path('mapcliente/', mapcliente_view, name='mapcliente'),
+    path('mapcliente/', views.mapcliente_view, name='mapcliente'),
     path('profile/', profile, name='profile'),
     path('logout/', logout_view, name='logout'),
     path('registro-parqueadero/', views.register_parqueadero, name='register_parqueadero'),

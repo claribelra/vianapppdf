@@ -34,7 +34,8 @@ class ParqueaderoPrivado(models.Model):
     nombre_comercial = models.CharField(max_length=100, blank=True, null=True)
     espacios = models.PositiveIntegerField()
     tipos_vehiculos = models.CharField(max_length=100)  # Coma separados
-    ubicacion_mapa = models.CharField(max_length=200, blank=True, null=True)
+    latitud = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    longitud = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     politicas = models.TextField(blank=True, null=True)
     foto_dueno = models.ImageField(upload_to='duenos_fotos/')
     foto_parqueadero = models.ImageField(upload_to='parqueaderos_fotos/')

@@ -35,13 +35,15 @@ class ParqueaderoPrivadoForm(forms.ModelForm):
     ]
     documento_tipo = forms.ChoiceField(choices=DOCUMENTO_CHOICES, required=True, label='Tipo de documento')
     password = forms.CharField(widget=forms.PasswordInput, label='Contraseña', required=True)
+    latitud = forms.DecimalField(label='Latitud', required=True, max_digits=9, decimal_places=6)
+    longitud = forms.DecimalField(label='Longitud', required=True, max_digits=9, decimal_places=6)
 
     class Meta:
         model = ParqueaderoPrivado
         fields = [
             'nombre_dueno', 'documento_tipo', 'documento_numero', 'telefono', 'email',
             'direccion', 'nombre_comercial', 'espacios', 'tipos_vehiculos',
-            'ubicacion_mapa', 'politicas', 'foto_dueno', 'foto_parqueadero', 'password'
+            'latitud', 'longitud', 'politicas', 'foto_dueno', 'foto_parqueadero', 'password'
         ]
         widgets = {
             'tipos_vehiculos': forms.TextInput(attrs={'placeholder': 'Ejemplo: carros, motos, bicicletas'}),

@@ -84,6 +84,16 @@
                         <small class="register-help" style="color:#d32f2f;font-weight:600;">Ejemplo: 4.7110,-74.0721. Si no ingresas una ubicación válida, tu parqueadero no aparecerá en el mapa del cliente.</small>
                     </div>
                 </div>
+                <div class="register-row">
+                    <div class="register-group">
+                        {{ form.latitud.label_tag }}
+                        {{ form.latitud }}
+                    </div>
+                    <div class="register-group">
+                        {{ form.longitud.label_tag }}
+                        {{ form.longitud }}
+                    </div>
+                </div>
                 <div class="register-group">
                     {{ form.politicas.label_tag }}
                     {{ form.politicas }}
