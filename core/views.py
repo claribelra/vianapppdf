@@ -162,7 +162,7 @@ def mapcliente_view(request):
 
     return render(request, "core/mapcliente.html", {
         "parqueaderos_json": json.dumps(parqueaderos_list),  # lo mandamos como JSON string
-    })
+    }) 
 
 @login_required
 def reservarcliente_view(request, pk):
