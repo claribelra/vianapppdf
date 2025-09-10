@@ -105,29 +105,39 @@
     </div>
 
     {% endblock %}
+
+    {% block extra_js %}
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       const slides = document.querySelectorAll('.carrusel-slide');
       const prevBtn = document.getElementById('carrusel-prev');
       const nextBtn = document.getElementById('carrusel-next');
       let current = 0;
+      
       function showSlide(idx) {
         slides.forEach((slide, i) => {
           slide.classList.toggle('active', i === idx);
         });
       }
+      
       if (prevBtn && nextBtn && slides.length > 0) {
-        prevBtn.onclick = function() {
+        prevBtn.addEventListener('click', function(e) {
+          e.preventDefault();
           current = (current - 1 + slides.length) % slides.length;
           showSlide(current);
-        };
-        nextBtn.onclick = function() {
+        });
+        
+        nextBtn.addEventListener('click', function(e) {
+          e.preventDefault();
           current = (current + 1) % slides.length;
           showSlide(current);
-        };
-        showSlide(current); // Inicializa el primer slide
+        });
+        
+        // Inicializa el primer slide
+        showSlide(current);
       }
     });
     </script>
+    {% endblock %}
 </body>
 </html>
