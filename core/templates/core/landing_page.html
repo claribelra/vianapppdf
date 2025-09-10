@@ -39,31 +39,41 @@
     <!-- Sección de imágenes de sedes -->
     <div class="imagensedes">
         <h1>¡Encuentra tu <span class="azul">parqueadero más cercano!</span> </h1>
-        <div class="imagenes-grid">
-            <div class="sede-card">
-                <img src="{% static 'core/img/barrio-los-rosales-de-bogota-1400x933.jpg' %}" alt="Los Rosales">
-                <button class="btn-sede">
-                    Los Rosales
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
+        <div class="imagenes-carrusel-container">
+            <button class="carrusel-arrow" id="carrusel-prev" aria-label="Anterior">&#60;</button>
+            <div class="imagenes-carrusel" id="imagenes-carrusel">
+                <div class="imagenes-slide active">
+                    <div class="sede-card">
+                        <img src="{% static 'core/img/barrio-los-rosales-de-bogota-1400x933.jpg' %}" alt="Los Rosales">
+                        <button class="btn-sede">Los Rosales <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+                    </div>
+                    <div class="sede-card">
+                        <img src="{% static 'core/img/Bogotá_calle_94_con_carrera_8_El_Chicó..jpeg' %}" alt="Chico norte">
+                        <button class="btn-sede">Chico norte <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+                    </div>
+                    <div class="sede-card">
+                        <img src="{% static 'core/img/1200px-Centro_empresarial_St_bárbara_Bogotá (1).jpeg' %}" alt="Santa bárbara">
+                        <button class="btn-sede">Santa bárbara <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+                    </div>
+                </div>
+                <div class="imagenes-slide">
+                    <div class="sede-card">
+                        <img src="{% static 'core/img/teusaquillo.jpg' %}" alt="Teusaquillo">
+                        <button class="btn-sede">Teusaquillo <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+                    </div>
+                    <div class="sede-card">
+                        <img src="{% static 'core/img/fontibon.jpg' %}" alt="Fontibon">
+                        <button class="btn-sede">Fontibon <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+                    </div>
+                    <div class="sede-card">
+                        <img src="{% static 'core/img/chapinero.jpg' %}" alt="Chapinero">
+                        <button class="btn-sede">Chapinero <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+                    </div>
+                </div>
             </div>
-            <div class="sede-card">
-                <img src="{% static 'core/img/Bogotá_calle_94_con_carrera_8_El_Chicó..jpeg' %}" alt="Chico norte">
-                <button class="btn-sede">
-                    Chico norte
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-            </div>
-            <div class="sede-card">
-                <img src="{% static 'core/img/1200px-Centro_empresarial_St_bárbara_Bogotá (1).jpeg' %}" alt="Santa bárbara">
-                <button class="btn-sede">
-                    Santa bárbara
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-            </div>
+            <button class="carrusel-arrow" id="carrusel-next" aria-label="Siguiente">&#62;</button>
         </div>
     </div>
-
 
     <div class="ovalocontainer">
      <div class="logonegro">
@@ -71,7 +81,7 @@
         <div class="logonegro-texto">
             Estaciona sin <span class="azul">estrés</span>, conduce con <span class="verde">confianza</span>
         </div>
-        <button class="btn-contactar">Contactar</button>
+        <button class="btn-contactar" onclick="window.open('https://wa.me/573006843562?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20parqueaderos%20ViANApp','_blank')">Contactar</button>
      </div>
     </div>
 
@@ -100,4 +110,28 @@
             </div>
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const slides = document.querySelectorAll('.imagenes-slide');
+        const prevBtn = document.getElementById('carrusel-prev');
+        const nextBtn = document.getElementById('carrusel-next');
+        let current = 0;
+        function showSlide(idx) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === idx);
+            });
+        }
+        prevBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            current = (current - 1 + slides.length) % slides.length;
+            showSlide(current);
+        });
+        nextBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            current = (current + 1) % slides.length;
+            showSlide(current);
+        });
+        showSlide(current);
+    });
+    </script>
 {% endblock %}

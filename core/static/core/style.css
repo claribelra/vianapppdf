@@ -118,8 +118,14 @@ body {
         justify-content: flex-start;
     }
     .textcontainer .logo-text-img {
+        display: block;
+        margin: 0 auto 10px auto !important;
         max-width: 120px;
-        margin-bottom: 10px;
+        min-width: 80px;
+        height: auto;
+        position: relative;
+        left: 0;
+        right: 0;
     }
     .textcontainer h2 {
         font-size: 1.3rem;
@@ -217,6 +223,16 @@ body {
         margin-top: 18px;
     }
 }
+@media (max-width: 600px) {
+    .textcontainer .logo-text-img {
+        display: block;
+        margin: 0 auto 6px auto !important;
+        max-width: 80px;
+        min-width: 60px;
+        left: 0;
+        right: 0;
+    }
+}
 
 /* Botón flotante Inicio */
 .btn-inicio {
@@ -287,65 +303,94 @@ body {
     border-radius: 12px;
 }
 
-/* Tarjetas de sedes */
-.sede-card {
+/* Carrusel de sedes - estilos */
+.imagenes-carrusel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin: 0 auto 24px auto;
+    width: 100%;
+    max-width: 1200px;
+}
+.carrusel-arrow {
+    background: #fff;
+    border: 2px solid #2196f3;
+    color: #2196f3;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #2196f322;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    z-index: 2;
+}
+.carrusel-arrow:hover {
+    background: #2196f3;
+    color: #fff;
+    border: 2px solid #1769aa;
+}
+.imagenes-carrusel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1100px;
+    min-height: 320px;
     position: relative;
-    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.imagenes-slide {
+    display: none;
+    flex-direction: row;
+    gap: 38px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s;
+}
+.imagenes-slide.active {
+    display: flex;
+    opacity: 1;
+}
+.sede-card {
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 2px 12px #0002;
+    overflow: hidden;
     width: 340px;
     height: 240px;
     display: flex;
+    flex-direction: column;
     align-items: flex-end;
-    margin-bottom: 10px;
-    flex: 1 1 320px;
+    margin-bottom: 0;
+    position: relative;
     max-width: 100%;
 }
 .sede-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 18px;
+    border-radius: 28px;
     display: block;
 }
-.btn-sede {
-    position: absolute;
-    left: 16px;
-    bottom: 16px;
-    background: #43a047;
-    color: #fff;
-    border: none;
-    border-radius: 22px;
-    padding: 7px 18px 7px 16px;
-    font-size: 1rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    cursor: pointer;
-    transition: background 0.2s;
-    z-index: 2;
-}
-.btn-sede:hover {
-    background: #2e7031;
-}
-
-@media (max-width: 1100px) {
-    .imagenes-grid {
-        gap: 18px;
+@media (max-width: 900px) {
+    .imagenes-carrusel-container {
+        gap: 8px;
+        max-width: 98vw;
     }
-    .sede-card {
-        width: 90vw;
-        height: 180px;
-        min-width: 220px;
+    .imagenes-carrusel {
+        max-width: 98vw;
+        min-height: 220px;
     }
-}
-@media (max-width: 700px) {
-    .imagenes-grid {
-        flex-direction: column;
-        align-items: center;
-        gap: 14px;
+    .imagenes-slide {
+        gap: 12px;
     }
     .sede-card {
         width: 98vw;
@@ -1724,4 +1769,163 @@ footer {
         height: 24px;
         margin-right: 8px;
     }
+}
+
+/* RESPONSIVE PARA reservarespacio.html */
+
+.textcontainer h1,
+.textcontainer p {
+    color: #fff;
+}
+.textcontainer {
+    margin-top: -18px;
+    gap: 2px;
+}
+.textcontainer h1 {
+    font-size: 2.2rem;
+    margin-top: 0;
+    margin-bottom: 2px;
+}
+.textcontainer p {
+    font-size: 1.15rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    max-width: 98vw;
+    text-align: center;
+}
+@media (max-width: 900px) {
+    .videocontainer {
+        min-height: 420px;
+        height: auto;
+        border-radius: 0;
+        padding: 0;
+    }
+    .videocontainer video {
+        border-radius: 0;
+        min-height: 320px;
+        height: 100%;
+    }
+    .videocontainer .overlay {
+        border-radius: 0;
+    }
+    .textcontainer {
+        padding: 0 8px;
+        gap: 8px;
+        min-height: 220px;
+        height: auto;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+    .textcontainer .logo-text-img {
+        max-width: 120px;
+        margin-bottom: 10px;
+    }
+    .textcontainer h1 {
+        font-size: 1.3rem;
+        margin-bottom: 2px;
+    }
+    .textcontainer p {
+        font-size: 1rem;
+        max-width: 98vw;
+        padding: 8px 6px;
+        margin-bottom: 0;
+        text-align: center;
+        word-break: break-word;
+    }
+    .textoct-flex {
+        flex-direction: column;
+        gap: 24px;
+        align-items: stretch;
+    }
+    .textoct-titulo, .textoct-parrafo {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .textoct-parrafo p {
+        text-align: center;
+        max-width: 100%;
+    }
+    .mapacontainer {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 8px;
+    }
+    .imgmapa img {
+        max-width: 98vw;
+        border-radius: 8px;
+    }
+    .textreserva h2 {
+        font-size: 2rem;
+    }
+    .textreserva-grid {
+        grid-template-columns: 1fr;
+        gap: 18px 0;
+        justify-items: start;
+    }
+    .textreserva-item {
+        font-size: 1.15rem;
+    }
+    .form-demo {
+        padding: 18px 4vw 18px 4vw;
+        max-width: 98vw;
+    }
+    .form-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+@media (max-width: 600px) {
+    .textcontainer {
+        margin-top: 0;
+        gap: 2px;
+    }
+    .textcontainer .logo-text-img {
+        max-width: 80px;
+        margin-bottom: 6px;
+    }
+    .textcontainer h1 {
+        font-size: 1.1rem;
+    }
+    .textcontainer p {
+        font-size: 0.95rem;
+        padding: 4px 2px;
+    }
+    .form-demo {
+        padding: 8px 2vw 8px 2vw;
+    }
+    .imgmapa img {
+        max-width: 98vw;
+        border-radius: 6px;
+    }
+}
+
+.btn-sede {
+    background: #43d14a;
+    color: #fff;
+    border: none;
+    border-radius: 22px;
+    padding: 8px 32px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(67,209,74,0.10);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
+    z-index: 2;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-sede:hover {
+    background: #2196f3;
+    color: #fff;
+}
+.btn-sede svg {
+    margin-left: 8px;
+}
+.sede-card {
+    position: relative;
 }
