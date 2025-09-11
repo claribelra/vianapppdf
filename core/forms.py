@@ -54,3 +54,23 @@ class ParqueaderoPrivadoForm(forms.ModelForm):
         self.fields['foto_dueno'].required = True
         self.fields['foto_parqueadero'].required = True
         self.fields['password'].required = True
+
+class ProfileUpdateForm(forms.ModelForm):
+    nombres = forms.CharField(max_length=100, label='Nombres')
+    apellidos = forms.CharField(max_length=100, label='Apellidos')
+    telefono = forms.CharField(max_length=20, label='Teléfono')
+    genero = forms.CharField(max_length=20, required=False, label='Género')
+    departamento = forms.CharField(max_length=50, label='Departamento')
+    municipio = forms.CharField(max_length=50, label='Municipio')
+    placa = forms.CharField(max_length=20, label='Placa')
+    tarjeta = forms.ImageField(required=False, label='Tarjeta de propiedad')
+
+    class Meta:
+        model = Profile
+        fields = ['nombres', 'apellidos', 'telefono', 'genero', 'departamento', 'municipio', 'placa', 'tarjeta']
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField(label='Correo')
+    class Meta:
+        model = User
+        fields = ['email']

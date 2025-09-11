@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
-from .forms import UserRegisterForm, UserLoginForm, ParqueaderoPrivadoForm
+from .forms import UserRegisterForm, UserLoginForm, ParqueaderoPrivadoForm, ProfileUpdateForm, UserUpdateForm
 from .models import Profile, ParqueaderoPrivado
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
@@ -172,4 +172,26 @@ def reservarcliente_view(request, pk):
         return redirect('landing_page')
     parqueadero = get_object_or_404(ParqueaderoPrivado, pk=pk)
     return render(request, 'core/reservarcliente.html', {'parqueadero': parqueadero})
+
+@login_required
+def profile_view(request):
+    user = request.user
+    profile = user.profile
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=user)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Perfil actualizado correctamente.')
+            return redirect('profile')
+    else:
+        user_form = UserUpdateForm(instance=user)
+        profile_form = ProfileUpdateForm(instance=profile)
+    return render(request, 'core/profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'profile': profile,
+        'user': user
+    })
 # Create your views here.

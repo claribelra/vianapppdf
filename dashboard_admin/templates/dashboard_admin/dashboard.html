@@ -1,0 +1,143 @@
+{% load static %}
+{% load dashboard_admin_extras %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'dashboard_admin/stylesadmin.css' %}">
+<div class="dashboard-admin-layout">
+    <!-- Botón hamburguesa para móvil/tablet -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Mostrar menú">
+        <span></span><span></span><span></span>
+    </button>
+    <aside class="sidebar-admin" id="sidebarAdmin">
+        <div class="sidebar-logo">VIANApp Admin</div>
+        <nav class="sidebar-nav">
+            <a href="/dashboard/" class="sidebar-link">Inicio</a>
+            <a href="/dashboard/usuarios/" class="sidebar-link{% if section == 'usuarios' %} active{% endif %}">Usuarios</a>
+            <a href="/dashboard/parqueaderos/" class="sidebar-link{% if section == 'parqueaderos' %} active{% endif %}">Parqueaderos</a>
+        </nav>
+        <div style="margin: 32px 0 0 0; text-align: center;">
+            <a href="/" class="btn-volver-landing">Volver a Landing Page</a>
+        </div>
+    </aside>
+    <main class="dashboard-content">
+        {% if section == 'usuarios' %}
+            <h1>Usuarios registrados</h1>
+            <div class="usuarios-table-container">
+                <table class="usuarios-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in usuarios %}
+                        <tr>
+                            <td>{{ u.profile.nombres }} {{ u.profile.apellidos }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>{{ u.profile.rol|title }}</td>
+                            <td>
+                                {% if u.is_active %}
+                                    <span class="estado-activo">Activo</span>
+                                {% else %}
+                                    <span class="estado-inactivo">Inactivo</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="post" action="/dashboard/usuarios/toggle/{{ u.id }}/" style="display:inline;">
+                                    {% csrf_token %}
+                                    {% if u.is_active %}
+                                        <button type="submit" class="btn-desactivar">Desactivar</button>
+                                    {% else %}
+                                        <button type="submit" class="btn-activar">Activar</button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% elif section == 'parqueaderos' %}
+            <h1>Parqueaderos registrados</h1>
+            <div class="usuarios-table-container">
+                <table class="usuarios-table">
+                    <thead>
+                        <tr>
+                            <th>Foto parqueadero</th>
+                            <th>Foto propietario</th>
+                            <th>Nombre comercial</th>
+                            <th>Dirección</th>
+                            <th>Ciudad</th>
+                            <th>Teléfono</th>
+                            <th>Propietario</th>
+                            <th>Email</th>
+                            <th>Espacios</th>
+                            <th>Estado usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in parqueaderos %}
+                        <tr>
+                            <td>
+                                {% if p.foto_parqueadero %}
+                                    <img src="{{ p.foto_parqueadero.url }}" alt="Foto parqueadero" style="width:70px;height:50px;object-fit:cover;border-radius:8px;box-shadow:0 2px 8px #2196f322;">
+                                {% else %}
+                                    <span style="color:#888;">Sin foto</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if p.foto_dueno %}
+                                    <img src="{{ p.foto_dueno.url }}" alt="Foto dueño" style="width:50px;height:50px;object-fit:cover;border-radius:50%;box-shadow:0 2px 8px #2196f322;">
+                                {% else %}
+                                    <span style="color:#888;">Sin foto</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ p.nombre_comercial }}</td>
+                            <td>{{ p.direccion }}</td>
+                            <td>{{ p.ciudad|default:'-' }}</td>
+                            <td>{{ p.telefono }}</td>
+                            <td>{{ p.nombre_dueno }}</td>
+                            <td>{{ p.email }}</td>
+                            <td>{{ p.espacios }}</td>
+                            <td>
+                                {% with user=usuarios|get_user_by_email:p.email %}
+                                    {% if user and user.is_active %}
+                                        <span class="estado-activo">Activo</span>
+                                    {% else %}
+                                        <span class="estado-inactivo">Inactivo</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <h1>Panel de Administración</h1>
+            <p>Bienvenido al panel de administración de VIANApp.</p>
+        {% endif %}
+    </main>
+</div>
+<!-- Script para toggle sidebar -->
+<script>
+    const sidebar = document.getElementById('sidebarAdmin');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    toggleBtn.addEventListener('click', function() {
+        sidebar.classList.toggle('sidebar-collapsed');
+        document.body.classList.toggle('sidebar-open');
+    });
+    // Cerrar sidebar al hacer click fuera en móvil
+    document.addEventListener('click', function(e) {
+        if(window.innerWidth <= 900 && document.body.classList.contains('sidebar-open')) {
+            if(!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+                sidebar.classList.remove('sidebar-collapsed');
+                document.body.classList.remove('sidebar-open');
+            }
+        }
+    });
+</script>
+{% endblock %}

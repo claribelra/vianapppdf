@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from . import views
-from .views import register, login_view
+from .views import register, login_view, profile_view
 
 @login_required
 def profile(request):
@@ -21,7 +21,7 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('servicios/', views.servicios, name='servicios'),
     path('mapcliente/', views.mapcliente_view, name='mapcliente'),
-    path('profile/', profile, name='profile'),
+    path('profile/', profile_view, name='profile'),
     path('logout/', logout_view, name='logout'),
     path('registro-parqueadero/', views.register_parqueadero, name='register_parqueadero'),
     path('mapa-parqueadero/<int:pk>/', views.mapa_parqueadero, name='mapa_parqueadero'),

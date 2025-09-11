@@ -23,6 +23,7 @@ import os
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),  # Incluye las URLs de la app core
+    path('dashboard/', include('dashboard_admin.urls')),  # Panel de administración personalizado
 ]
 
 if settings.DEBUG:

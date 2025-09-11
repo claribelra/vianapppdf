@@ -1,0 +1,400 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
+
+/* Estilos exclusivos para el dashboard de administración */
+
+body, .dashboard-admin-layout, .dashboard-content, .sidebar-admin, .sidebar-logo, .sidebar-link, .usuarios-table th, .usuarios-table td, .estado-activo, .estado-inactivo, .btn-desactivar, .btn-activar {
+    font-family: 'Montserrat', Arial, sans-serif !important;
+}
+
+.dashboard-admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f4f7fb;
+}
+.sidebar-admin {
+    width: 240px;
+    min-width: 70px;
+    background: linear-gradient(135deg, #0632c4 0%, #2196f3 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    box-shadow: 2px 0 16px #0632c422;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+.sidebar-logo {
+    font-size: 1.7rem;
+    font-weight: 800;
+    padding: 38px 0 28px 0;
+    text-align: center;
+    letter-spacing: 1.5px;
+    background: rgba(255,255,255,0.08);
+    border-bottom: 1.5px solid #ffffff22;
+    transition: font-size 0.2s, padding 0.2s;
+    text-shadow: 0 2px 12px #0632c455;
+}
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 32px;
+    padding: 0 0 0 0;
+}
+.sidebar-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.13rem;
+    font-weight: 600;
+    padding: 16px 32px;
+    border-left: 4px solid transparent;
+    transition: background 0.18s, border 0.18s, color 0.18s;
+    word-break: break-word;
+    border-radius: 0 18px 18px 0;
+    letter-spacing: 0.2px;
+}
+.sidebar-link.active, .sidebar-link:hover {
+    background: #2196f3;
+    border-left: 4px solid #43e97b;
+    color: #fff;
+    box-shadow: 0 2px 12px #2196f344;
+}
+.dashboard-content {
+    flex: 1;
+    padding: 56px 48px 48px 48px;
+    background: #f4f7fb;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.dashboard-content > h1 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0632c4;
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+    text-align: left;
+    width: 100%;
+    max-width: 1100px;
+}
+.usuarios-table-container {
+    margin-top: 0;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 16px #2196f322;
+    padding: 24px 8px;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 1100px;
+}
+.usuarios-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.08rem;
+    min-width: 700px;
+    background: transparent;
+}
+.usuarios-table th, .usuarios-table td {
+    padding: 14px 10px;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 600;
+}
+.usuarios-table th {
+    background: #f4f7fb;
+    color: #0632c4;
+    font-weight: 800;
+    border-bottom: 2px solid #2196f3;
+    font-size: 1.09rem;
+    letter-spacing: 0.2px;
+}
+.usuarios-table tr:nth-child(even) {
+    background: #f7fbff;
+}
+.usuarios-table tr {
+    transition: background 0.18s;
+}
+.usuarios-table tr:hover {
+    background: #eaf1fb;
+}
+.estado-activo {
+    color: #43a047;
+    font-weight: 700;
+    background: #e3f9e5;
+    padding: 4px 16px;
+    border-radius: 8px;
+    font-size: 1.01em;
+    display: inline-block;
+    box-shadow: 0 2px 8px #43a04711;
+}
+.estado-inactivo {
+    color: #d32f2f;
+    font-weight: 700;
+    background: #ffeaea;
+    padding: 4px 16px;
+    border-radius: 8px;
+    font-size: 1.01em;
+    display: inline-block;
+    box-shadow: 0 2px 8px #d32f2f11;
+}
+.btn-desactivar, .btn-activar {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-weight: 700;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s;
+    margin: 0 2px;
+    min-width: 100px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    box-shadow: 0 2px 8px #2196f322;
+}
+.btn-desactivar {
+    background: linear-gradient(90deg,#ff5f6d 0%,#ffc371 100%);
+    color: #fff;
+}
+.btn-desactivar:hover {
+    background: linear-gradient(90deg,#d32f2f 0%,#ffb300 100%);
+    box-shadow: 0 4px 16px #ff5f6d33;
+}
+.btn-activar {
+    background: linear-gradient(90deg,#43e97b 0%,#38f9d7 100%);
+    color: #fff;
+}
+.btn-activar:hover {
+    background: linear-gradient(90deg,#43a047 0%,#2196f3 100%);
+    box-shadow: 0 4px 16px #43e97b33;
+}
+.btn-volver-landing {
+    display: inline-block;
+    margin-top: 18px;
+    background: linear-gradient(90deg,#43e97b 0%,#38f9d7 100%);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.13rem;
+    padding: 12px 34px;
+    border-radius: 32px;
+    text-decoration: none;
+    box-shadow: 0 4px 18px #43e97b33, 0 2px 8px #2196f322;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+    border: none;
+    letter-spacing: 0.7px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.btn-volver-landing:hover, .btn-volver-landing:focus {
+    background: linear-gradient(90deg,#43a047 0%,#2196f3 100%);
+    color: #fff;
+    box-shadow: 0 8px 24px #2196f344, 0 2px 8px #43e97b33;
+    transform: translateY(-2px) scale(1.04);
+    text-decoration: none;
+}
+img[alt="Foto parqueadero"] {
+    width: 70px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px #2196f322;
+}
+img[alt="Foto dueño"] {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px #2196f322;
+}
+@media (max-width: 1100px) {
+    .dashboard-content, .usuarios-table-container {
+        max-width: 98vw;
+    }
+}
+@media (max-width: 900px) {
+    .sidebar-admin { width: 70px; min-width: 50px; }
+    .sidebar-logo { font-size: 1.1rem; padding: 14px 0; }
+    .sidebar-link { font-size: 0.97rem; padding: 12px 10px; }
+    .dashboard-content { padding: 18px 2vw; }
+    .usuarios-table { font-size: 0.98rem; }
+    .btn-volver-landing {
+        font-size: 1rem;
+        padding: 10px 18px;
+        margin-top: 8px;
+    }
+    .sidebar-toggle {
+        display: flex;
+    }
+    .sidebar-admin {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 240px;
+        min-width: 0;
+        transform: translateX(-110%);
+        transition: transform 0.32s cubic-bezier(.4,2,.6,1);
+        box-shadow: 2px 0 16px #0632c422;
+        z-index: 1000;
+        border-radius: 0 18px 18px 0;
+    }
+    .sidebar-admin.sidebar-collapsed,
+    body.sidebar-open .sidebar-admin {
+        transform: translateX(0);
+        box-shadow: 2px 0 32px #0632c455;
+    }
+    .dashboard-content {
+        padding-left: 0 !important;
+    }
+    /* Overlay para cerrar sidebar */
+    body.sidebar-open::before {
+        content: '';
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: #0008;
+        z-index: 999;
+        pointer-events: auto;
+        transition: opacity 0.2s;
+    }
+}
+@media (max-width: 600px) {
+    .dashboard-admin-layout {
+        flex-direction: column;
+    }
+    .sidebar-admin {
+        flex-direction: row;
+        width: 100vw;
+        min-width: 0;
+        height: 54px;
+        min-height: 54px;
+        position: static;
+        box-shadow: 0 2px 12px #0632c422;
+        z-index: 20;
+    }
+    .sidebar-logo {
+        display: none;
+    }
+    .sidebar-nav {
+        flex-direction: row;
+        gap: 0;
+        margin-top: 0;
+        width: 100vw;
+        justify-content: space-between;
+    }
+    .sidebar-link {
+        padding: 10px 6px;
+        font-size: 0.93rem;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        border-radius: 0;
+        flex: 1 1 0;
+        text-align: center;
+        min-width: 0;
+        white-space: nowrap;
+    }
+    .sidebar-link.active, .sidebar-link:hover {
+        background: #2196f3;
+        border-bottom: 3px solid #43e97b;
+        border-left: none;
+    }
+    .dashboard-content {
+        padding: 10px 1vw 18px 1vw;
+        min-height: 80vh;
+    }
+    .usuarios-table-container {
+        padding: 8px 2px;
+        border-radius: 10px;
+    }
+    .usuarios-table th, .usuarios-table td {
+        padding: 7px 4px;
+        font-size: 0.93em;
+    }
+    .usuarios-table {
+        min-width: 520px;
+        font-size: 0.93em;
+    }
+    img[alt="Foto parqueadero"] {
+        width: 48px;
+        height: 36px;
+    }
+    img[alt="Foto dueño"] {
+        width: 36px;
+        height: 36px;
+    }
+    .dashboard-content > h1 {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+    }
+    .btn-volver-landing {
+        width: 92vw;
+        margin: 10px auto 0 auto;
+        display: block;
+        font-size: 1rem;
+        padding: 12px 0;
+        border-radius: 18px;
+    }
+    .sidebar-admin {
+        width: 90vw;
+        min-width: 0;
+        border-radius: 0 18px 18px 0;
+    }
+    .btn-volver-landing {
+        width: 90vw;
+        margin: 10px auto 0 auto;
+        display: block;
+    }
+}
+@media (max-width: 480px) {
+    .usuarios-table {
+        min-width: 400px;
+    }
+    .dashboard-content {
+        padding: 6px 1vw;
+    }
+}
+/* --- Sidebar toggle y hamburguesa --- */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 22px;
+    left: 22px;
+    z-index: 1001;
+    width: 44px;
+    height: 44px;
+    background: #fff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px #0632c422;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    padding: 0;
+    transition: background 0.18s, box-shadow 0.18s;
+}
+.sidebar-toggle span {
+    display: block;
+    width: 26px;
+    height: 4px;
+    background: #0632c4;
+    border-radius: 2px;
+    transition: all 0.25s cubic-bezier(.4,2,.6,1);
+}
+/* Animación hamburguesa a X cuando abierto */
+body.sidebar-open .sidebar-toggle span:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+}
+body.sidebar-open .sidebar-toggle span:nth-child(2) {
+    opacity: 0;
+}
+body.sidebar-open .sidebar-toggle span:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+}
