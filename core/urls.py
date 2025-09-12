@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from . import views
 from .views import register, login_view, profile_view
+from .views_password import password_reset_request
+from .views_password_reset import password_reset_confirm
 
 @login_required
 def profile(request):
@@ -26,4 +28,6 @@ urlpatterns = [
     path('registro-parqueadero/', views.register_parqueadero, name='register_parqueadero'),
     path('mapa-parqueadero/<int:pk>/', views.mapa_parqueadero, name='mapa_parqueadero'),
     path('reservarcliente/<int:pk>/', views.reservarcliente_view, name='reservarcliente'),
+    path('recuperar/', password_reset_request, name='password_reset_request'),
+    path('reset-password/<int:user_id>/<str:token>/', password_reset_confirm, name='password_reset_confirm'),
 ]

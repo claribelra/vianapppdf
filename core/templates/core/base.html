@@ -33,6 +33,12 @@
                 <div class="user-menu-dropdown" id="user-menu-dropdown" style="display:none;">
                     <div class="user-menu-name">{{ user.profile.nombres }} {{ user.profile.apellidos }}</div>
                     <a href="{% url 'profile' %}" class="user-menu-link">Mi perfil</a>
+                    {% if user.is_authenticated and user.profile.rol == 'cliente' %}
+                        <a href="{% url 'mapcliente' %}" class="user-menu-link">Ir a mapa cliente</a>
+                    {% endif %}
+                    {% if user.is_authenticated and user.profile.rol == 'admin' %}
+                        <a href="/dashboard/" class="user-menu-link">Dashboard</a>
+                    {% endif %}
                     <a href="{% url 'logout' %}" class="user-menu-link">Cerrar sesión</a>
                 </div>
             </div>

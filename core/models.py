@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -42,3 +45,47 @@ class ParqueaderoPrivado(models.Model):
     
     def __str__(self):
         return f"{self.nombre_comercial or self.direccion} ({self.nombre_dueno})"
+
+class Valoracion(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    parqueadero = models.ForeignKey(ParqueaderoPrivado, on_delete=models.CASCADE)
+    comentario = models.TextField(max_length=500)
+    rating = models.PositiveSmallIntegerField(choices=[(i, str(i)) for i in range(1, 6)])
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('usuario', 'parqueadero', 'id')
+        ordering = ['-fecha']
+
+    def clean(self):
+        # Limitar a 2 valoraciones por usuario y parqueadero
+        if not self.usuario_id or not self.parqueadero_id:
+            return  # No validar si aún no están asignados
+        count = Valoracion.objects.filter(usuario=self.usuario, parqueadero=self.parqueadero).exclude(pk=self.pk).count()
+        if count >= 2:
+            raise ValidationError('Solo puedes dejar hasta 2 valoraciones para este parqueadero.')
+
+    def save(self, *args, **kwargs):
+        # Solo llamar a full_clean si usuario y parqueadero ya están asignados
+        if self.usuario_id and self.parqueadero_id:
+            self.full_clean()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.parqueadero} - {self.rating} estrellas"
+
+@receiver(post_save, sender=User)
+def create_or_update_profile(sender, instance, created, **kwargs):
+    if created:
+        # Si es superuser, el perfil será admin
+        rol = 'admin' if instance.is_superuser else 'cliente'
+        Profile.objects.create(user=instance, rol=rol, nombres=instance.first_name or '', apellidos=instance.last_name or '', telefono='', cedula='', departamento='', municipio='', placa='')
+    else:
+        # Si el usuario ya existe y es superuser, aseguramos que el perfil sea admin
+        try:
+            profile = instance.profile
+            if instance.is_superuser and profile.rol != 'admin':
+                profile.rol = 'admin'
+                profile.save()
+        except Profile.DoesNotExist:
+            Profile.objects.create(user=instance, rol='admin' if instance.is_superuser else 'cliente', nombres=instance.first_name or '', apellidos=instance.last_name or '', telefono='', cedula='', departamento='', municipio='', placa='')

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile, ParqueaderoPrivado
+from .models import Profile, ParqueaderoPrivado, Valoracion
 
 class UserRegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label='Contraseña')
@@ -74,3 +74,16 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email']
+
+class ValoracionForm(forms.ModelForm):
+    class Meta:
+        model = Valoracion
+        fields = ['rating', 'comentario']
+        widgets = {
+            'comentario': forms.Textarea(attrs={'rows':2, 'placeholder':'Escribe tu comentario...', 'class':'form-control', 'style':'border-radius:10px;'}),
+            'rating': forms.Select(choices=[(i, f"{i} estrella{'s' if i > 1 else ''}") for i in range(1,6)], attrs={'class':'form-control', 'style':'border-radius:10px;'}),
+        }
+        labels = {
+            'rating': 'Calificación',
+            'comentario': 'Comentario',
+        }

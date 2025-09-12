@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
-from .forms import UserRegisterForm, UserLoginForm, ParqueaderoPrivadoForm, ProfileUpdateForm, UserUpdateForm
-from .models import Profile, ParqueaderoPrivado
+from .forms import UserRegisterForm, UserLoginForm, ParqueaderoPrivadoForm, ProfileUpdateForm, UserUpdateForm, ValoracionForm
+from .models import Profile, ParqueaderoPrivado, Valoracion
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.contrib import messages
 import json
+from django.core.mail import send_mail
+from django.conf import settings
 
 def landing_page(request):
     return render(request, 'core/landing_page.html')
@@ -33,7 +35,9 @@ def login_view(request):
                     auth_login(request, user_auth)
                     try:
                         profile = user_auth.profile
-                        if profile.rol == 'cliente':
+                        if profile.rol == 'admin':
+                            return redirect('/dashboard/')
+                        elif profile.rol == 'cliente':
                             return redirect('mapcliente')
                         elif profile.rol == 'parqueadero':
                             parqueadero = ParqueaderoPrivado.objects.filter(email=user_auth.email).first()
@@ -72,6 +76,14 @@ def register(request):
                 placa=form.cleaned_data['placa'],
                 tarjeta=form.cleaned_data.get('tarjeta', None)
             )
+            # Enviar correo de bienvenida
+            send_mail(
+                subject='¡Bienvenido a VIANApp!',
+                message=f'Hola {form.cleaned_data["nombres"]},\n\n¡Gracias por registrarte en VIANApp! Ya puedes disfrutar de todos nuestros servicios.\n\nSaludos,\nEl equipo VIANApp',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[form.cleaned_data['email']],
+                fail_silently=True,
+            )
             return redirect('login')
     else:
         form = UserRegisterForm()
@@ -99,6 +111,14 @@ def register_parqueadero(request):
                 parqueadero = form.save(commit=False)
                 parqueadero.email = email
                 parqueadero.save()
+                # Enviar correo de bienvenida
+                send_mail(
+                    subject='¡Bienvenido a VIANApp!',
+                    message=f'Hola {nombre_dueno},\n\n¡Gracias por registrar tu parqueadero en VIANApp! Ya puedes gestionar tus espacios y recibir clientes.\n\nSaludos,\nEl equipo VIANApp',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=True,
+                )
                 return redirect('login')
     else:
         form = ParqueaderoPrivadoForm()
@@ -171,12 +191,44 @@ def reservarcliente_view(request, pk):
         messages.error(request, 'Inicia sesión como cliente para reservar un cupo.')
         return redirect('landing_page')
     parqueadero = get_object_or_404(ParqueaderoPrivado, pk=pk)
-    return render(request, 'core/reservarcliente.html', {'parqueadero': parqueadero})
+    user = request.user
+    valoraciones_usuario = Valoracion.objects.filter(usuario=user, parqueadero=parqueadero)
+    valoraciones_parqueadero = Valoracion.objects.filter(parqueadero=parqueadero).select_related('usuario').order_by('-fecha')
+    puede_valorar = valoraciones_usuario.count() < 2
+    form = ValoracionForm()
+    if request.method == 'POST' and 'enviar_valoracion' in request.POST:
+        form = ValoracionForm(request.POST)
+        if form.is_valid() and puede_valorar:
+            nueva_valoracion = form.save(commit=False)
+            # Asignar usuario y parqueadero antes de cualquier validación
+            nueva_valoracion.usuario = user
+            nueva_valoracion.parqueadero = parqueadero
+            # Validar manualmente el límite antes de llamar a clean/save
+            count = Valoracion.objects.filter(usuario=user, parqueadero=parqueadero).count()
+            if count >= 2:
+                messages.error(request, 'Ya has dejado el máximo de 2 valoraciones para este parqueadero.')
+            else:
+                nueva_valoracion.save()
+                messages.success(request, '¡Gracias por tu valoración!')
+                return redirect('reservarcliente', pk=pk)
+        elif not puede_valorar:
+            messages.error(request, 'Ya has dejado el máximo de 2 valoraciones para este parqueadero.')
+    return render(request, 'core/reservarcliente.html', {
+        'parqueadero': parqueadero,
+        'form_valoracion': form,
+        'valoraciones_usuario': valoraciones_usuario,
+        'valoraciones_parqueadero': valoraciones_parqueadero,
+        'puede_valorar': puede_valorar,
+    })
 
 @login_required
 def profile_view(request):
     user = request.user
-    profile = user.profile
+    try:
+        profile = user.profile
+    except Profile.DoesNotExist:
+        # Si el usuario no tiene perfil, lo creamos con valores por defecto
+        profile = Profile.objects.create(user=user, nombres=user.first_name or '', apellidos=user.last_name or '', telefono='', cedula='', departamento='', municipio='', placa='')
     if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, instance=user)
         profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
