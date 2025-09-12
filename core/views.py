@@ -19,6 +19,31 @@ def reservarespacio(request):
 def contactanos(request):
     return render(request, 'core/contactanos.html')
 
+def contactanos_view(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+        ciudad = request.POST.get('ciudad')
+        mensaje = request.POST.get('mensaje')
+        cuerpo = f"""
+        Nombre: {nombre}
+        Correo: {correo}
+        Teléfono: {telefono}
+        Ciudad: {ciudad}
+        Mensaje: {mensaje}
+        """
+        send_mail(
+            subject=f'Nuevo mensaje de contacto de {nombre}',
+            message=cuerpo,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.DEFAULT_FROM_EMAIL],
+            fail_silently=False,
+        )
+        messages.success(request, '¡Tu mensaje ha sido enviado exitosamente!')
+        return redirect('contactanos')
+    return render(request, 'core/contactanos.html')
+
 def login_view(request):
     if request.method == 'POST':
         form = UserLoginForm(request.POST)

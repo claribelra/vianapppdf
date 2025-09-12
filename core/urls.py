@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 from . import views
-from .views import register, login_view, profile_view
+from .views import register, login_view, profile_view, contactanos_view
 from .views_password import password_reset_request
 from .views_password_reset import password_reset_confirm
 
@@ -18,7 +18,7 @@ def logout_view(request):
 urlpatterns = [
     path('', views.landing_page, name='landing_page'),
     path('reservarespacio/', views.reservarespacio, name='reservarespacio'),
-    path('contactanos/', views.contactanos, name='contactanos'),
+    path('contactanos/', contactanos_view, name='contactanos'),
     path('login/', login_view, name='login'),
     path('register/', register, name='register'),
     path('servicios/', views.servicios, name='servicios'),
