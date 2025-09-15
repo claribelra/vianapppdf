@@ -23,6 +23,7 @@ class Profile(models.Model):
     municipio = models.CharField(max_length=50)
     placa = models.CharField(max_length=20)
     tarjeta = models.ImageField(upload_to='tarjetas/', blank=True, null=True)
+    parqueaderoprivado = models.OneToOneField('ParqueaderoPrivado', on_delete=models.SET_NULL, null=True, blank=True, related_name='dueno_profile')
 
     def __str__(self):
         return f"{self.user.username} - {self.rol}"
@@ -42,6 +43,8 @@ class ParqueaderoPrivado(models.Model):
     politicas = models.TextField(blank=True, null=True)
     foto_dueno = models.ImageField(upload_to='duenos_fotos/')
     foto_parqueadero = models.ImageField(upload_to='parqueaderos_fotos/')
+    tarifa_hora = models.PositiveIntegerField(default=0)
+    tarifa_dia = models.PositiveIntegerField(default=0)
     
     def __str__(self):
         return f"{self.nombre_comercial or self.direccion} ({self.nombre_dueno})"
@@ -73,6 +76,19 @@ class Valoracion(models.Model):
 
     def __str__(self):
         return f"{self.usuario.username} - {self.parqueadero} - {self.rating} estrellas"
+
+class Reserva(models.Model):
+    parqueadero = models.ForeignKey(ParqueaderoPrivado, on_delete=models.CASCADE, related_name='reservas')
+    nombre = models.CharField(max_length=100)
+    cedula = models.CharField(max_length=30)
+    telefono = models.CharField(max_length=30)
+    placa = models.CharField(max_length=20)
+    tipo_vehiculo = models.CharField(max_length=20)
+    fecha_hora = models.DateTimeField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.nombre} - {self.parqueadero.nombre_comercial} - {self.fecha_hora}"
 
 @receiver(post_save, sender=User)
 def create_or_update_profile(sender, instance, created, **kwargs):

@@ -39,6 +39,12 @@
                     {% if user.is_authenticated and user.profile.rol == 'admin' %}
                         <a href="/dashboard/" class="user-menu-link">Dashboard</a>
                     {% endif %}
+                    {% if user.is_authenticated and user.profile.rol == 'parqueadero' and user.profile.parqueaderoprivado %}
+                        <a href="{% url 'mapa_parqueadero' user.profile.parqueaderoprivado.id %}" class="user-menu-link">Ir a gestión parqueadero</a>
+                    {% endif %}
+                    {% if user.is_authenticated and user.profile.rol == 'parqueadero' and not user.profile.parqueaderoprivado %}
+                        <a href="{% url 'register_parqueadero' %}" class="user-menu-link">Registrar parqueadero</a>
+                    {% endif %}
                     <a href="{% url 'logout' %}" class="user-menu-link">Cerrar sesión</a>
                 </div>
             </div>

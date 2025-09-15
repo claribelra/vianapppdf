@@ -1,11 +1,18 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load form_extras %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro Parqueadero Privado</title>
+    <style>
+        .form-errors p { color: #d32f2f; font-weight: 600; margin-bottom: 6px; }
+        .field-error { border: 2px solid #d32f2f !important; background: #fff3f3 !important; }
+        .register-help { color: #2196f3; font-size: 0.98em; margin-top: 2px; display: block; }
+        .register-group { margin-bottom: 12px; }
+    </style>
 </head>
 <body>
     {% block content %}
@@ -15,6 +22,7 @@
                 {% csrf_token %}
                 {% if form.errors %}
                     <div class="form-errors">
+                        <strong>Corrige los siguientes errores para continuar:</strong>
                         {% for field in form %}
                             {% for error in field.errors %}
                                 <p>{{ field.label }}: {{ error }}</p>
@@ -30,83 +38,150 @@
                 <div class="register-row">
                     <div class="register-group">
                         {{ form.nombre_dueno.label_tag }}
-                        {{ form.nombre_dueno }}
+                        {% if form.nombre_dueno.errors %}
+                            {{ form.nombre_dueno|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.nombre_dueno }}
+                        {% endif %}
+                        <small class="register-help">{{ form.nombre_dueno.help_text }}</small>
                     </div>
                     <div class="register-group">
                         {{ form.documento_tipo.label_tag }}
-                        {{ form.documento_tipo }}
+                        {% if form.documento_tipo.errors %}
+                            {{ form.documento_tipo|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.documento_tipo }}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="register-row">
                     <div class="register-group">
                         {{ form.documento_numero.label_tag }}
-                        {{ form.documento_numero }}
+                        {% if form.documento_numero.errors %}
+                            {{ form.documento_numero|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.documento_numero }}
+                        {% endif %}
+                        <small class="register-help">{{ form.documento_numero.help_text }}</small>
                     </div>
                     <div class="register-group">
                         {{ form.telefono.label_tag }}
-                        {{ form.telefono }}
+                        {% if form.telefono.errors %}
+                            {{ form.telefono|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.telefono }}
+                        {% endif %}
+                        <small class="register-help">{{ form.telefono.help_text }}</small>
                     </div>
                 </div>
                 <div class="register-row">
                     <div class="register-group">
                         {{ form.email.label_tag }}
-                        {{ form.email }}
+                        {% if form.email.errors %}
+                            {{ form.email|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.email }}
+                        {% endif %}
+                        <small class="register-help">{{ form.email.help_text }}</small>
                     </div>
                     <div class="register-group">
                         {{ form.password.label_tag }}
-                        {{ form.password }}
+                        {% if form.password.errors %}
+                            {{ form.password|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.password }}
+                        {% endif %}
+                        <small class="register-help">{{ form.password.help_text }}</small>
                     </div>
                 </div>
                 <div class="register-row">
                     <div class="register-group">
                         {{ form.direccion.label_tag }}
-                        {{ form.direccion }}
+                        {% if form.direccion.errors %}
+                            {{ form.direccion|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.direccion }}
+                        {% endif %}
+                        <small class="register-help">{{ form.direccion.help_text }}</small>
                     </div>
                 </div>
                 <div class="register-row">
                     <div class="register-group">
                         {{ form.nombre_comercial.label_tag }}
-                        {{ form.nombre_comercial }}
+                        {% if form.nombre_comercial.errors %}
+                            {{ form.nombre_comercial|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.nombre_comercial }}
+                        {% endif %}
+                        <small class="register-help">{{ form.nombre_comercial.help_text }}</small>
                     </div>
                     <div class="register-group">
                         {{ form.espacios.label_tag }}
-                        {{ form.espacios }}
+                        {% if form.espacios.errors %}
+                            {{ form.espacios|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.espacios }}
+                        {% endif %}
+                        <small class="register-help">{{ form.espacios.help_text }}</small>
                     </div>
                 </div>
                 <div class="register-row">
                     <div class="register-group">
                         {{ form.tipos_vehiculos.label_tag }}
-                        {{ form.tipos_vehiculos }}
-                    </div>
-                    <div class="register-group">
-                        {{ form.ubicacion_mapa.label_tag }}
-                        {{ form.ubicacion_mapa }}
-                        <small class="register-help" style="color:#d32f2f;font-weight:600;">Ejemplo: 4.7110,-74.0721. Si no ingresas una ubicación válida, tu parqueadero no aparecerá en el mapa del cliente.</small>
+                        {% if form.tipos_vehiculos.errors %}
+                            {{ form.tipos_vehiculos|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.tipos_vehiculos }}
+                        {% endif %}
+                        <small class="register-help">{{ form.tipos_vehiculos.help_text }}</small>
                     </div>
                 </div>
                 <div class="register-row">
                     <div class="register-group">
                         {{ form.latitud.label_tag }}
-                        {{ form.latitud }}
+                        {% if form.latitud.errors %}
+                            {{ form.latitud|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.latitud }}
+                        {% endif %}
+                        <small class="register-help">{{ form.latitud.help_text }}</small>
                     </div>
                     <div class="register-group">
                         {{ form.longitud.label_tag }}
-                        {{ form.longitud }}
+                        {% if form.longitud.errors %}
+                            {{ form.longitud|add_class:'field-error' }}
+                        {% else %}
+                            {{ form.longitud }}
+                        {% endif %}
+                        <small class="register-help">{{ form.longitud.help_text }}</small>
                     </div>
                 </div>
                 <div class="register-group">
                     {{ form.politicas.label_tag }}
-                    {{ form.politicas }}
+                    {% if form.politicas.errors %}
+                        {{ form.politicas|add_class:'field-error' }}
+                    {% else %}
+                        {{ form.politicas }}
+                    {% endif %}
+                    <small class="register-help">{{ form.politicas.help_text }}</small>
                 </div>
                 <div class="register-group">
                     {{ form.foto_dueno.label_tag }}
-                    {{ form.foto_dueno }}
-                    <small class="register-help">Sube una foto tuya para mayor seguridad y confianza en la plataforma.</small>
+                    {% if form.foto_dueno.errors %}
+                        {{ form.foto_dueno|add_class:'field-error' }}
+                    {% else %}
+                        {{ form.foto_dueno }}
+                    {% endif %}
+                    <small class="register-help">{{ form.foto_dueno.help_text }}</small>
                 </div>
                 <div class="register-group">
                     {{ form.foto_parqueadero.label_tag }}
-                    {{ form.foto_parqueadero }}
-                    <small class="register-help">Sube una foto del parqueadero para mostrar a los usuarios.</small>
+                    {% if form.foto_parqueadero.errors %}
+                        {{ form.foto_parqueadero|add_class:'field-error' }}
+                    {% else %}
+                        {{ form.foto_parqueadero }}
+                    {% endif %}
+                    <small class="register-help">{{ form.foto_parqueadero.help_text }}</small>
                 </div>
                 <button type="submit" class="btn-register-main">Registrar parqueadero</button>
             </form>

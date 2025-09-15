@@ -2,24 +2,91 @@
 {% load static %}
 {% block title %}Mapa Parqueadero | VianApp{% endblock %}
 {% block content %}
+{% if messages %}
+  <div id="messages-container" style="position:fixed;top:24px;right:24px;z-index:9999;min-width:260px;">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}" style="border-radius:10px;padding:14px 22px;font-size:1.08rem;box-shadow:0 2px 12px #2196f355;margin-bottom:10px;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+  <script>
+    setTimeout(function() {
+      var msg = document.getElementById('messages-container');
+      if(msg) msg.style.display = 'none';
+    }, 3000); // 3 segundos
+  </script>
+{% endif %}
 <div class="container my-4 position-relative" style="z-index: 2;">
     <div id="map" style="height: 500px; width: 100%; border-radius: 12px; z-index: 1;"></div>
     <div class="row mt-4" style="display: flex; flex-wrap: wrap; justify-content:center; gap:24px; margin-top:32px;">
         <div class="col-md-5 col-12" style="min-width:320px; margin-right:2px;">
-            <table class="table table-bordered" style="width:100%; background:#fff; border-radius:12px;">
-                <tr>
-                    <th>Tarifa / hora</th>
-                    <td><input type="number" min="0" step="100" value="" placeholder="Precio por hora" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ccc;"></td>
-                </tr>
-                <tr>
-                    <th>Tarifa / día</th>
-                    <td><input type="number" min="0" step="100" value="" placeholder="Precio por día" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ccc;"></td>
-                </tr>
-                <tr>
-                    <th>Cupos disponibles</th>
-                    <td><input type="number" min="0" value="" placeholder="Modificar cupos" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ccc;"></td>
-                </tr>
-            </table>
+            <form method="post" enctype="multipart/form-data" style="margin-bottom:0;">
+                {% csrf_token %}
+                <table class="table table-bordered" style="width:100%; background:#fff; border-radius:12px;">
+                    <tr>
+                        <th>Tarifa / hora</th>
+                        <td><input type="number" min="0" step="100" name="tarifa_hora" value="{{ parqueadero.tarifa_hora|default:'' }}" placeholder="Precio por hora" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ccc;"></td>
+                    </tr>
+                    <tr>
+                        <th>Tarifa / día</th>
+                        <td><input type="number" min="0" step="100" name="tarifa_dia" value="{{ parqueadero.tarifa_dia|default:'' }}" placeholder="Precio por día" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ccc;"></td>
+                    </tr>
+                    <tr>
+                        <th>Cupos disponibles</th>
+                        <td><input type="number" min="0" name="espacios" value="{{ parqueadero.espacios|default:'' }}" placeholder="Modificar cupos" style="width:100%; padding:6px; border-radius:6px; border:1px solid #ccc;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align:center;">
+                            <button type="submit" class="btn btn-primary" style="margin-top:8px; border-radius:8px; padding:8px 24px; font-weight:600; font-size:1.08rem; background:#2196f3; border:none; color:#fff;">Guardar cambios</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <!-- Cuadro de reservas recientes -->
+            <div style="background:#f8fafd;border-radius:12px;box-shadow:0 2px 8px #2196f322;padding:16px 12px;margin-top:18px;">
+                <h5 style="color:#2196f3;font-weight:700;margin-bottom:10px;">Reservas recientes</h5>
+                {% if reservas_parqueadero %}
+                <div style="max-height:180px;overflow-y:auto;">
+                    <table style="width:100%;font-size:0.98rem;">
+                        <thead>
+                            <tr style="background:#e3f2fd;">
+                                <th style="padding:6px 4px;">Nombre</th>
+                                <th>Cédula</th>
+                                <th>Teléfono</th>
+                                <th>Placa</th>
+                                <th>Tipo</th>
+                                <th>Fecha/Hora</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in reservas_parqueadero %}
+                            <tr>
+                                <td style="padding:6px 4px;">{{ r.nombre }}</td>
+                                <td>{{ r.cedula }}</td>
+                                <td>{{ r.telefono }}</td>
+                                <td>{{ r.placa }}</td>
+                                <td>{{ r.tipo_vehiculo }}</td>
+                                <td>{{ r.fecha_hora }}</td>
+                                <td>
+                                    <form method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="cancelar_reserva_id" value="{{ r.id }}">
+                                        <button type="submit" class="btn btn-danger btn-sm" style="border-radius:6px;padding:4px 10px;font-size:0.98rem;" onclick="return confirm('¿Cancelar esta reserva?')">
+                                            <i class="fas fa-times"></i> Cancelar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <div class="text-muted" style="font-size:0.98rem;">Aún no hay reservas para este parqueadero.</div>
+                {% endif %}
+            </div>
         </div>
         <div class="col-md-5 col-12" style="min-width:320px; margin-left:2px;">
             <form method="post" enctype="multipart/form-data" style="margin-bottom:0;">
@@ -59,7 +126,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align:center;">
-                            <button type="submit" class="btn-reserva" style="margin-top:8px;">Guardar cambios</button>
+                            <button type="submit" class="btn-reserva" style="margin-top:8px; background:#2196f3; color:#fff; border:none; border-radius:8px; padding:8px 24px; font-weight:600; font-size:1.08rem;">Guardar cambios</button>
                         </td>
                     </tr>
                 </table>
@@ -128,6 +195,10 @@
         if (!isNaN(lat) && !isNaN(lng)) {
             var marker = L.marker([lat, lng]).addTo(map).bindPopup(popupContent).openPopup();
         }
+        // Recarga automática cada 20 segundos
+        setInterval(function() {
+            window.location.reload();
+        }, 20000); // 20000 ms = 20 segundos
     });
 </script>
 {% endblock %}

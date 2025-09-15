@@ -40,7 +40,70 @@
             </div>
         </div>
     </div>
+
+    <!-- RESERVAS DEL CLIENTE -->
+    <div class="mt-4" style="max-width:700px;margin:0 auto 24px auto;">
+        <div style="background:#e3f9e5;border-radius:16px;box-shadow:0 2px 12px #43a04722;padding:18px 18px 10px 18px;">
+            <h4 style="color:#43a047;font-weight:800;margin-bottom:10px;">Mis reservas activas</h4>
+            {% if reservas_cliente %}
+            <div style="max-height:200px;overflow-y:auto;">
+                <table class="table table-bordered" style="background:#fff;border-radius:10px;">
+                    <thead>
+                        <tr style="background:#e3f2fd;">
+                            <th>Parqueadero</th>
+                            <th>Dirección</th>
+                            <th>Placa</th>
+                            <th>Tipo</th>
+                            <th>Fecha/Hora</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in reservas_cliente %}
+                        <tr>
+                            <td>{{ r.parqueadero.nombre_comercial|default:r.parqueadero.direccion }}</td>
+                            <td>{{ r.parqueadero.direccion }}</td>
+                            <td>{{ r.placa }}</td>
+                            <td>{{ r.tipo_vehiculo }}</td>
+                            <td>{{ r.fecha_hora|date:'d/m/Y H:i' }}</td>
+                            <td>
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cancelar_reserva_id" value="{{ r.id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" style="border-radius:6px;padding:4px 10px;font-size:0.98rem;" onclick="return confirm('¿Cancelar esta reserva?')">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="text-muted" style="font-size:1.05rem;">Aún no tienes reservas activas.</div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- FIN RESERVAS DEL CLIENTE -->
+
 </div>
+
+{% if messages %}
+  <div id="messages-container" style="position:fixed;top:24px;right:24px;z-index:9999;min-width:260px;">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}" style="border-radius:10px;padding:14px 22px;font-size:1.08rem;box-shadow:0 2px 12px #2196f355;margin-bottom:10px;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+  <script>
+    setTimeout(function() {
+      var msg = document.getElementById('messages-container');
+      if(msg) msg.style.display = 'none';
+    }, 3000); // 3 segundos
+  </script>
+{% endif %}
 
 <!-- Leaflet CDN -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -223,6 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var nombre = p.nombre_comercial || '';
         var direccion = p.direccion || '';
         var tarifaHora = p.tarifa_hora || 'No disponible';
+        var tarifaDia = p.tarifa_dia || 'No disponible';
         var cupos = p.espacios || 'No disponible';
 
         var popupContent = `
@@ -231,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <br><strong>${nombre}</strong>
                 <br><span style="font-size:0.95em;">${direccion}, ${ciudad}</span>
                 <br><span style="font-size:0.95em;">Tarifa/hora: $${tarifaHora}</span>
+                <br><span style="font-size:0.95em;">Tarifa/día: $${tarifaDia}</span>
                 <br><span style="font-size:0.95em;">Cupos disponibles: ${cupos}</span>
                 <div style='display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:10px;'>
                     <a href="/reservarcliente/${p.id}/" class="popup-btn reservar-btn">Reservar cupo</a>
